@@ -20,9 +20,9 @@
     <script src="//cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
     <!--codemirror-->
-    <link rel="stylesheet" href="Lib/codemirror.css">
-    <link rel="stylesheet" href="Lib/idea.css">
-    <link rel="stylesheet" href="Lib/simplescrollbars.css">
+    <link rel="stylesheet" href="lib/codemirror.css">
+    <link rel="stylesheet" href="lib/idea.css">
+    <link rel="stylesheet" href="lib/simplescrollbars.css">
 
     <style>
         html, body {
@@ -259,15 +259,15 @@
 ================================================== -->
 <!-- Placed at the end of the document so the pages load faster -->
 
-<script src="Lib/jquery.min.js"></script>
-<script src="Lib/bootstrap.min.js"></script>
-<script src="Lib/codemirror.js"></script>
-<script src="Lib/htmlmixed.js"></script>
-<script src="Lib/javascript.js"></script>
-<script src="Lib/css.js"></script>
-<script src="Lib/xml.js"></script>
-<script src="Lib/active-line.js"></script>
-<script src="Lib/simplescrollbars.js"></script>
+<script src="lib/jquery.min.js"></script>
+<script src="lib/bootstrap.min.js"></script>
+<script src="lib/codemirror.js"></script>
+<script src="lib/htmlmixed.js"></script>
+<script src="lib/javascript.js"></script>
+<script src="lib/css.js"></script>
+<script src="lib/xml.js"></script>
+<script src="lib/active-line.js"></script>
+<script src="lib/simplescrollbars.js"></script>
 <script>
     // 页面高度控制
     var height = 0, width = 0, bodyHeight = parseInt($("body").width()), iframe = $("#codeIframe"), codeText = $("#codeText"), navbar = $("#bs-example-navbar-collapse-1"), editor;
@@ -297,7 +297,7 @@
             url: location.toString() + ".html",
             dataType: "text",
             success: function (r) {
-                r = r.replace("../../Scripts/MapAPI_JavaScript.min.js", "http://thiee.com/Lib/MapAPI_JavaScript.min.js")
+                r = r.replace("../../Scripts/MapAPI_JavaScript.min.js", "http://thiee.com/lib/MapAPI_JavaScript.min.js")
                 r = r.replace("../../Scripts/area.js", "http://thiee.com/Scripts/area.js")
                 editor.setValue(r);
             }, error: function (e) {
