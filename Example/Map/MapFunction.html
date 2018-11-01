@@ -1,0 +1,241 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>地图初始化</title>
+    <style type="text/css">
+        html, body {
+            padding: 0;
+            margin: 0;
+        }
+
+        #container {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+        }
+
+
+        .amap-scale-middle {
+            height: 4px;
+        }
+
+        .amap-scale-edgeleft, .amap-scale-edgeright {
+            width: 4px;
+        }
+    </style>
+    <script src="../../Scripts/MapAPI_JavaScript.min.js"></script>
+    <script src="../../Scripts/jquery-1.9.1.min.js"></script>
+    <link href="../../Content/bootstrap.min.css" rel="stylesheet" />
+</head>
+<body>
+    <div id="container"></div>
+    <div id="codes" style=" position:absolute; bottom:0; width:100%; height:290px;display:none">
+        <table class="table table-condensed">
+            <tr><th>代码</th></tr>
+            <tr>
+                <td>
+                    <textarea class="form-control" style="width:100%;height:250px;">
+                        <!DOCTYPE html>
+                        <html xmlns="http://www.w3.org/1999/xhtml">
+
+                        <head>
+                            <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+                            <title>地图初始化</title>
+                            <style type="text/css">
+                                html, body {
+                                    padding: 0;
+                                    margin: 0;
+                                }
+
+                                #container {
+                                    width: 100%;
+                                    height: 100%;
+                                    position: absolute;
+                                }
+                            </style>
+                            <script src="../MapAPI_JavaScript.min.js"></script>
+                        </head>
+
+                        <body>
+                            <div id="container"></div>
+                            <script type="text/javascript">
+                                var option = new TYMapOptions({
+                                    contentId: "container",//必填，地图容器
+                                    //  lnglat: new TYLngLat(114.50, 38.000),//可选 默认ip定位
+                                    mapLevel: 12//可选默认 12
+                                });
+                                TYInitialize(option);
+                                option = new TYConfigOption({
+                                    isShowOverView: true,
+                                    isShowControl: true,
+                                    isShowSale: true,
+                                    // isAnimate:平移动画 默认开启
+                                    // isHotspot：地图热点气泡 默认开启
+                                    // isRotate地图是否可旋转 默认开启
+                                    // isDrag:true//是否可拖拽  默认可拖拽
+                                    //  isZoom：是否放大缩小 默认放大缩小
+                                    isDoubleClickZoom: false// 双击放大地图 默认开启
+                                });
+
+                                TYMapConfig(option);
+                                function setcenter() {
+                                    if ($("#center").val()) {
+                                        var c = $("#center").val().split(",")
+                                        TYSetCenter(new TYLngLat(parseFloat(c[0]), parseFloat(c[1])));//设置中心
+                                        TYSetLevel(8);//设置等级
+                                        // alert("地图中心设置成功")
+                                    }
+                                }
+                                function setbounds() {
+                                    //清除视野控制
+                                    TYBoundsClear();
+                                    TYSetBounds(new TYBoundsOption({
+                                        t_r_lnglat: new TYLngLat(116.11, 38.42),//右上经纬度
+                                        b_l_lnglat: new TYLngLat(114.101, 38.00)//左下经纬度
+                                    }));
+
+                                }
+                                function setlimitbounds() {
+                                    alert("拖动一下地图试试效果!");
+                                    TYSetLimitBounds(new TYBoundsOption({
+                                        t_r_lnglat: new TYLngLat(116.11, 38.42),
+                                        b_l_lnglat: new TYLngLat(114.101, 38.00)
+                                    }));
+                                    TYSetLevel(6);
+                                }
+                                function setlevel(t) {
+                                    TYSetLevel($(t).val());
+                                }
+                            </script>
+                        </body>
+
+                    </html>
+                </textarea>
+
+            </td>
+        </tr>
+    </table>
+</div>
+
+
+<div id="codeshow" data="0" class="btn btn-default" style="position:absolute; right:20px; top:20px;font-family:Helvetica, 'Hiragino Sans GB', 'Microsoft Yahei', '微软雅黑', Arial;"><span class=" glyphicon glyphicon-eye-open"></span> 查看源码</div>
+
+
+
+<script>
+    $(document).ready(function () {
+        $("#codeshow").click(function () {
+            var he = $("#container").css("height");
+            var hei = he.split("px")[0];
+            if ($("#codeshow").attr("data") == "0") {
+                $("#container").css("height", (parseInt(hei) - 300) + "px");
+                $("#codes").css("display", "block")
+                $("#codeshow").removeClass("btn-default").addClass("btn-success");
+                $("#codeshow").attr("data", "1")
+            } else {
+                $("#container").css("height", (parseInt(hei) + 300) + "px");
+                $("#codes").css("display", "none")
+                $("#codeshow").removeClass("btn-success").addClass("btn-default");
+                $("#codeshow").attr("data", "0")
+            }
+
+        })
+    })
+</script>
+
+<div style=" position:absolute;right:20px;top:60px">
+   
+    <input type="button" onclick="setlimitbounds()" class="btn btn-default" value="限制视野范围" />
+
+    <input type="button" onclick="setbounds()" class="btn btn-default" value="设置视野范围" />
+    <br />
+    <br />
+    <div class="panel panel-default">
+        <div class="panel-heading">设置地图中心 </div>
+        <div style="padding:5px" class="form-inline">
+            <input type="text" id="center" class="form-control input-sm" value="114.50, 39.000" />&nbsp;<button class=" btn btn-sm btn-default" onclick="setcenter()">设置中心点</button>
+        </div>
+    </div>
+
+    <div class="panel panel-default">
+        <div class="panel-heading">设置视野等级 </div>
+        <div class="radio" style="padding:5px">
+            <label><input type="radio" onchange="setlevel(this)" name="leval" value="3" />3</label>
+            <label><input type="radio" onchange="setlevel(this)" name="leval" value="4" />4</label>
+            <label><input type="radio" onchange="setlevel(this)" name="leval" value="5" />5</label>
+            <label><input type="radio" onchange="setlevel(this)" name="leval" value="6" />6</label>
+            <label><input type="radio" onchange="setlevel(this)" name="leval" value="7" />7</label>
+            <label><input type="radio" onchange="setlevel(this)" name="leval" value="8" />8</label>
+            <label><input type="radio" onchange="setlevel(this)" name="leval" value="9" />9</label>
+            <label><input type="radio" onchange="setlevel(this)" name="leval" value="10" />10</label>
+            <label><input type="radio" onchange="setlevel(this)" name="leval" value="11" />11</label><br />
+            <label><input type="radio" onchange="setlevel(this)" name="leval" value="12" />12</label>
+            <label><input type="radio" onchange="setlevel(this)" name="leval" value="13" />13</label>
+            <label><input type="radio" onchange="setlevel(this)" name="leval" value="14" />14</label>
+            <label><input type="radio" onchange="setlevel(this)" name="leval" value="15" />15</label>
+            <label><input type="radio" onchange="setlevel(this)" name="leval" value="16" />16</label>
+            <label><input type="radio" onchange="setlevel(this)" name="leval" value="17" />17</label>
+            <label><input type="radio" onchange="setlevel(this)" name="leval" value="18" />18</label>
+        </div>
+    </div>
+
+    
+</div>
+    <div class="alert alert-success" style="position:absolute;top:20px;left:100px">
+        <b>限制视野范围：</b>固定视野，左下角坐标：114.101, 38.00，右上角坐标：116.11, 38.42。<br />
+        <b>设置视野范围：</b>视野跳转到该区域，左下角坐标：114.121, 38.00，右上角坐标：116.12, 38.42。<br />
+        <b>设置地图中心：</b>设置视野中心，坐标：默认石家庄市。<br />
+        <b>设置视野等级：</b>默认视野等级12，设置改变地图视野。
+    </div>
+<script type="text/javascript">
+    var option = new TYMapOptions({
+        contentId: "container",//必填，地图容器
+        //  lnglat: new TYLngLat(114.50, 38.000),//可选 默认ip定位
+        mapLevel: 12//可选默认 12
+    });
+    TYInitialize(option);
+    option = new TYConfigOption({
+        isShowOverView: true,
+        isShowControl: true,
+        isShowSale: true,
+        // isAnimate:平移动画 默认开启
+        // isHotspot：地图热点气泡 默认开启
+        // isRotate地图是否可旋转 默认开启
+        // isDrag:true//是否可拖拽  默认可拖拽
+        //  isZoom：是否放大缩小 默认放大缩小
+        isDoubleClickZoom: false// 双击放大地图 默认开启
+    });
+
+    TYMapConfig(option);
+    function setcenter() {
+        if ($("#center").val()) {
+            var c = $("#center").val().split(",")
+            TYSetCenter(new TYLngLat(parseFloat(c[0]), parseFloat(c[1])));//设置中心
+            TYSetLevel(8);//设置等级
+           // alert("地图中心设置成功")
+        }
+    }
+    function setbounds() {
+        //清除视野控制
+        TYBoundsClear();
+        TYSetBounds(new TYBoundsOption({
+            t_r_lnglat: new TYLngLat(116.11, 38.42),//右上经纬度
+            b_l_lnglat: new TYLngLat(114.101, 38.00)//左下经纬度
+        }));
+
+    }
+    function setlimitbounds() {
+        alert("拖动一下地图试试效果!");
+        TYSetLimitBounds(new TYBoundsOption({
+            t_r_lnglat: new TYLngLat(116.11, 38.42),
+            b_l_lnglat: new TYLngLat(114.101, 38.00)
+        }));
+        TYSetLevel(6);
+    }
+    function setlevel(t) {
+        TYSetLevel($(t).val());
+    }
+</script>
+</body>
+</html>

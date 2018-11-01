@@ -1,0 +1,356 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>THIEE.COM</title>
+    <!-- Bootstrap core CSS -->
+
+    <link href="Content/bootstrap.min.css" rel="stylesheet"/>
+    <!-- Custom styles for this template -->
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+    <script src="//cdn.bootcss.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+    <script src="//cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    <!--codemirror-->
+    <link rel="stylesheet" href="lib/codemirror.css">
+    <link rel="stylesheet" href="lib/idea.css">
+    <link rel="stylesheet" href="lib/simplescrollbars.css">
+
+    <style>
+        html, body {
+            overflow: hidden;
+            margin: 0px;
+        }
+
+        body {
+            padding: 55px 0 0 0;
+        }
+
+        .radius-red {
+            position: absolute;
+            left: 18px;
+            top: 8px;
+            height: 8px;
+            width: 8px;
+            border-radius: 8px;
+            background-color: red;
+        }
+
+        .muen {
+            padding-left: 2.5px;
+        }
+
+        .code-text {
+            padding-left: 2.5px;
+            border: 1px solid #dddddd;
+            border-radius: 3px;
+        }
+
+        .code-iframe {
+            border: 1px solid #dddddd;
+            border-radius: 3px;
+        }
+
+        .code-body {
+            border: 1px solid #dddddd;
+            border-radius: 3px;
+            font-size: 12px;
+
+        }
+
+        .fix-padding {
+            padding: 2px;
+            float: left;
+        }
+
+        a {
+            color: #777;
+            text-decoration: none;
+            outline: none;
+        }
+
+        a:hover {
+            color: dodgerblue;
+        }
+
+
+    </style>
+</head>
+
+<body class="load">
+
+<nav class="navbar navbar-default  navbar-fixed-top">
+    <div class="container-fluid" style="  box-shadow:2px 2px 2px #cccccc; border-bottom:1px">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar"
+                    aria-expanded="false" aria-controls="navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#">THIEE</a>
+        </div>
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav">
+                <li class="active"><a href="#">首页 <span class="sr-only">(current)</span></a></li>
+                <li><a href="#">谷歌地图</a></li>
+                <li><a href="#">在线切片(格式化URL)</a></li>
+                <li><a href="#">测量(经纬度,距离,面积)</a></li>
+                <li><a href="#">坐标转换(DB09,GCJ02,WGS84)</a><span class="radius-red"></span></li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+                       aria-expanded="false">工具 <span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="#">谷歌地图</a></li>
+                        <li><a href="#">在线切片(格式化URL)</a></li>
+                        <li><a href="#">测量(经纬度,距离,面积)</a></li>
+                        <li><a href="#">测量(经纬度,距离,面积)</a></li>
+                    </ul>
+                </li>
+            </ul>
+            <!--   <form class="navbar-form navbar-left">
+                   <div class="form-group">
+                       <input type="text" class="form-control" placeholder="Search">
+                   </div>
+                   <button type="submit" class="btn btn-default">Submit</button>
+               </form>-->
+            <ul class="nav navbar-nav navbar-right">
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+                       aria-expanded="false"><span class="glyphicon glyphicon-envelope"></span> </a>
+                    <ul class="dropdown-menu">
+                        <li><a href="#"> luwenjungg@gmail.com</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div><!-- /.navbar-collapse -->
+    </div>
+</nav>
+
+<div>
+    <div class="fix-padding" style="width: 15%">
+        <div id="muen" class="muen">
+            <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+                <div class="panel panel-default">
+                    <div class="panel-heading" role="tab" id="headingOne">
+                        <h4 class="panel-title" role="button" data-toggle="collapse" data-parent="#accordion"
+                            href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                            <a class="collapsed">
+                                地图
+                            </a>
+                        </h4>
+                    </div>
+                    <div id="collapseOne" class="panel-collapse collapse in" role="tabpanel"
+                         aria-labelledby="headingOne">
+                        <div class="panel-body">
+                            <a><b>基础</b></a>
+                            <ol style="list-style-type: circle">
+                                <a href="javascript:" name="href" data="Example/map/Initialize">初始化</a>
+                                <a href="javascript:" name="href" data="Example/map/MapConfig">组件配置</a>
+                                <a href="javascript:" name="href" data="Example/map/MapFunction">视野控制</a>
+                            </ol>
+                            <a><b>图形</b></a>
+                            <ol style="list-style-type: circle">
+                                <a href="javascript:" name="href" data="Example/overlay/Points">点标记</a>
+                                <a href="javascript:" name="href" data="Example/overlay/Lines">多线段</a>
+                                <a href="javascript:" name="href" data="Example/overlay/Rectangle">矩形</a>
+                                <a href="javascript:" name="href" data="Example/overlay/Polygon">多边形</a>
+                                <a href="javascript:" name="href" data="Example/overlay/Circle">圆形</a>
+                                <a href="javascript:" name="href" data="Example/overlay/Remove">绘制清空</a>
+                            </ol>
+                            <a><b>组件</b></a>
+                            <ol style="list-style-type: circle">
+                                <a href="javascript:" name="href" data="Example/overlay/DrawOverlay">手绘工具</a>
+                                <a href="javascript:" name="href" data="Example/overlay/InfoWindow">气泡</a>
+                                <a href="javascript:" name="href" data="Example/overlay/MoveLocus">轨迹回放</a>
+                                <a href="javascript:" name="href" data="Example/overlay/AreaRender">行政边界渲染</a>
+                            </ol>
+                            <a><b>图层</b></a>
+                            <ol style="list-style-type: circle">
+                                <a href="javascript:" name="href" data="Example/controls/MapTraffic">拥堵图层</a>
+                                <a href="javascript:" name="href" data="Example/overlay/MassPoint">海量点</a>
+                                <a href="javascript:" name="href" data="Example/controls/MapTiles">图层切换</a>
+                                <a href="javascript:" name="href" data="Example/controls/Panorama">全景地图</a>
+                                <a href="javascript:" name="href" data="Example/controls/HeatMap">热力图层</a>
+                            </ol>
+                            <a><b>工具</b></a>
+                            <ol style="list-style-type: circle">
+                                <a href="javascript:" name="href" data="Example/server/ConvertFrom">坐标转换</a>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel panel-default">
+                    <div class="panel-heading" role="tab" id="headingTwo">
+                        <h4 class="panel-title" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo"
+                            role="button" data-toggle="collapse" data-parent="#accordion">
+                            <a class="collapsed">
+                                工具
+                            </a>
+                        </h4>
+                    </div>
+                    <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
+                        <div class="panel-body">
+
+
+                        </div>
+                    </div>
+                </div>
+               <!-- <div class="panel panel-default">
+                    <div class="panel-heading" role="tab" id="headingThree">
+                        <h4 class="panel-title" role="button" data-toggle="collapse" data-parent="#accordion"
+                            href="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                            <a class="collapsed">
+                                杂项
+                            </a>
+                        </h4>
+                    </div>
+                    <div id="collapseThree" class="panel-collapse collapse" role="tabpanel"
+                         aria-labelledby="headingThree">
+                        <div class="panel-body">
+
+
+                        </div>
+                    </div>
+                </div>
+                <div class="panel panel-default">
+                    <div class="panel-heading" role="tab" id="headingFour">
+                        <h4 class="panel-title" role="button" data-toggle="collapse" data-parent="#accordion"
+                            href="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
+                            <a class="collapsed">
+                                杂项
+                            </a>
+                        </h4>
+                    </div>
+                    <div id="collapseFour" class="panel-collapse collapse" role="tabpanel"
+                         aria-labelledby="headingFour">
+                        <div class="panel-body">
+
+                        </div>
+                    </div>
+                </div>-->
+
+            </div>
+        </div>
+    </div>
+    <div class="fix-padding" style="width: 30%;">
+        <div class="code-body">
+            <textarea id="codeText" class="code-text">// loading ...</textarea>
+        </div>
+    </div>
+    <div class="fix-padding" style="width: 55%">
+        <iframe id="codeIframe" class="code-iframe" width="100%"></iframe>
+    </div>
+</div>
+
+
+</div>
+<!-- Bootstrap core JavaScript
+================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+
+<script src="lib/jquery.min.js"></script>
+<script src="lib/bootstrap.min.js"></script>
+<script src="lib/codemirror.js"></script>
+<script src="lib/htmlmixed.js"></script>
+<script src="lib/javascript.js"></script>
+<script src="lib/css.js"></script>
+<script src="lib/xml.js"></script>
+<script src="lib/active-line.js"></script>
+<script src="lib/simplescrollbars.js"></script>
+<script>
+    // 页面高度控制
+    var height = 0, width = 0, bodyHeight = parseInt($("body").width()), iframe = $("#codeIframe"), codeText = $("#codeText"), navbar = $("#bs-example-navbar-collapse-1"), editor;
+
+    initPageConfig()
+    initEditCode()
+    initGetSource()
+
+    // source code
+    $(document).ready(function () {
+        $("a[name='href']").click(function () {
+            var location = $(this).attr("data");
+            // console.log(location)
+            // 设置URl
+            window.location.href = "#" + location
+            // 运行
+            $(iframe).attr("src", location + ".html");
+            // 代码
+            initGetSource(location);
+        })
+    })
+
+
+    function initGetSource(href) {
+        var location = href ? href : "Example/Map/Initialize";
+        $.ajax({
+            url: location.toString() + ".html",
+            dataType: "text",
+            success: function (r) {
+                r = r.replace("../../Scripts/MapAPI_JavaScript.min.js", "http://thiee.com/Scripts/MapAPI_JavaScript.min.js")
+                r = r.replace("../../Scripts/area.js", "http://thiee.com/Scripts/area.js")
+                editor.setValue(r);
+            }, error: function (e) {
+                throw e
+            }
+        })
+    }
+
+    function initPageConfig() {
+        window.onload = function () {
+            iframeLoadData()
+            resizeToiframe()
+        }
+        window.onresize = resizeToiframe
+
+        function resizeToiframe() {
+            var height = window.innerHeight - parseInt($(navbar).height())
+            $(iframe).height(height - 15);
+            //编辑器高度
+            editor.setSize("100%", height - 15)
+        }
+
+        function iframeLoadData() {
+            var location = (window.location.hash.indexOf("#") > -1) ? window.location.hash : "Example/Map/Initialize";
+            $(iframe).attr("src", location.toString().substring(1) + ".html");
+        }
+    }
+
+    function initEditCode() {
+        editor = CodeMirror.fromTextArea(document.getElementById("codeText"), {
+            lineWrapping: true, //在长行时文字是换行(wrap)还是滚动(scroll)，默认为滚动(scroll)。
+            lineNumbers: true, //是否显示number
+            foldGutter: true, //是否显示代码折叠
+            autoCloseTags: false,
+            scrollbarStyle: "native",
+            //代码折叠快捷键
+            extraKeys: {
+                "Ctrl-Q": function (cm) {
+                    cm.foldCode(cm.getCursor());
+                }
+            },
+            gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter"],
+            styleActiveLine: true,
+            matchBrackets: true,
+            mode: "htmlmixed",
+            //   theme: "idea",
+            styleActiveLine: true,
+            scrollbarStyle: "simple"
+            // viewportMargin : Infinity
+        });
+    }
+
+</script>
+
+</body>
+</html>

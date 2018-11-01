@@ -1,0 +1,224 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>绘制线</title>
+    <style type="text/css">
+        html, body {
+            padding: 0;
+            margin: 0;
+        }
+
+        #container {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+        }
+    </style>
+    <script src="../../Scripts/MapAPI_JavaScript.min.js"></script>
+    <script src="../../Scripts/jquery-1.9.1.min.js"></script>
+    <link href="../../Content/bootstrap.min.css" rel="stylesheet" />
+</head>
+<body style="overflow:hidden">
+    <div id="container"></div>
+    <div class="alert alert-success" style="position:absolute; left:100px; top:20px; ">
+        1.拖动红色实线节点，可以再次编辑线的形状。<br />
+        2.点击蓝色虚线触发回调函数。<br />
+    </div>
+    <div id="codes" style=" position:absolute; bottom:0; width:100%; height:290px;display:none">
+        <table class="table table-condensed">
+            <tr><th>代码</th></tr>
+            <tr>
+                <td>
+                    <textarea class="form-control" style="width:100%;height:250px;">
+                        <!DOCTYPE html>
+                        <html xmlns="http://www.w3.org/1999/xhtml">
+
+                        <head>
+                            <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+                            <title>绘制线</title>
+                            <style type="text/css">
+                                html, body {
+                                    padding: 0;
+                                    margin: 0;
+                                }
+
+                                #container {
+                                    width: 100%;
+                                    height: 100%;
+                                    position: absolute;
+                                }
+                            </style>
+                            <script src="../MapAPI_JavaScript.min.js"></script>
+                        </head>
+
+                        <body>
+                            <div id="container"></div>
+                            <script type="text/javascript">
+                                var option = new TYMapOptions({
+                                    contentId: "container",//必填，地图容器
+                                    lnglat: new TYLngLat(114.50, 38.000),//可选 默认ip定位
+                                    mapLevel: 12//可选默认 12
+                                });
+                                TYInitialize(option);
+                                //------地图配置------//
+
+                                TYMapConfig(new TYConfigOption());
+                                function addline() {
+                                    var dataArr = [], lineArr = [], lineArr2 = [];
+                                    lineArr.push(new TYLngLat(113.08 + 2, 38.30 + 2));
+                                    lineArr.push(new TYLngLat(114.08 + 2, 38.30 + 2));
+                                    lineArr.push(new TYLngLat(115.08 + 2, 38.30 + 2));
+                                    lineArr.push(new TYLngLat(116.08 + 2, 38.30 + 2));
+
+                                    lineArr2.push(new TYLngLat(113.08 + 4, 38.30 + 4));
+                                    lineArr2.push(new TYLngLat(114.08 + 4, 38.30 + 4));
+                                    lineArr2.push(new TYLngLat(115.08 + 4, 38.30 + 4));
+                                    lineArr2.push(new TYLngLat(116.08 + 4, 38.30 + 4));
+
+                                    for (var i = 0; i < 2; i++) {
+                                        var data = new TYLine();
+                                        data.isEdit = true;
+
+                                        data.lineId = "line" + i;
+                                        data.lineOpacity = .7;
+
+                                        if (i == 1) {
+                                            data.lineType = "solid";
+                                            data.lineWidth = 3;
+                                            data.lineColor = "red";
+                                        } else {
+                                            data.lineType = "dashed";
+                                            data.lineColor = "blue";
+                                            data.lineWidth = 15;
+                                            data.isEdit = false;
+                                        }
+                                        if (i == 0) data.lnglat = lineArr;
+                                        if (i == 1) data.lnglat = lineArr2;
+                                        dataArr.push(data)
+                                    }
+                                    var line = new TYLineOption();
+                                    line.lineData = dataArr;
+                                    line.lineState.isClearOverlay = true;
+                                    //实例化事件参数
+                                    var event = new TYOverlayEvent();
+                                    event.mouseEvent = TYEnumEvent.TY_CLICK;
+                                    event.mouseFunc = clickLine;
+                                    line.lineState.overlayEvent = event;
+                                    line.lineState.isSetView = true;
+                                    TYDrawLine(line);
+                                }
+                                TYAddMapEvent(new TYEventOptions({
+                                    event: TYEnumEvent.TY_RIGHTCLICK,
+                                    callback: addline
+                                }))
+                                addline();
+                                function clickLine(e) {
+                                    alert("触发回调事件")
+                                    console.log(e)
+                                }
+                            </script>
+                        </body>
+
+                    </html>
+                </textarea>
+
+            </td>
+        </tr>
+    </table>
+</div>
+
+
+<div id="codeshow" data="0" class="btn btn-default" style="position:absolute; right:20px; top:20px;font-family:Helvetica, 'Hiragino Sans GB', 'Microsoft Yahei', '微软雅黑', Arial;"><span class=" glyphicon glyphicon-eye-open"></span> 查看源码</div>
+
+
+
+<script>
+    $(document).ready(function () {
+        $("#codeshow").click(function () {
+            var he = $("#container").css("height");
+            var hei = he.split("px")[0];
+            if ($("#codeshow").attr("data") == "0") {
+                $("#container").css("height", (parseInt(hei) - 300) + "px");
+                $("#codes").css("display", "block")
+                $("#codeshow").removeClass("btn-default").addClass("btn-success");
+                $("#codeshow").attr("data", "1")
+            } else {
+                $("#container").css("height", (parseInt(hei) + 300) + "px");
+                $("#codes").css("display", "none")
+                $("#codeshow").removeClass("btn-success").addClass("btn-default");
+                $("#codeshow").attr("data", "0")
+            }
+
+        })
+    })
+</script>
+
+<script type="text/javascript">
+    var option = new TYMapOptions({
+        contentId: "container",//必填，地图容器
+        lnglat: new TYLngLat(114.50, 38.000),//可选 默认ip定位
+        mapLevel: 12//可选默认 12
+    });
+    TYInitialize(option);
+    //------地图配置------//
+
+    TYMapConfig(new TYConfigOption());
+    function addline() {
+        var dataArr = [], lineArr = [], lineArr2 = [];
+        lineArr.push(new TYLngLat(113.08 + 2, 38.30 + 2));
+        lineArr.push(new TYLngLat(114.08 + 2, 38.30 + 2));
+        lineArr.push(new TYLngLat(115.08 + 2, 38.30 + 2));
+        lineArr.push(new TYLngLat(116.08 + 2, 38.30 + 2));
+
+        lineArr2.push(new TYLngLat(113.08 + 4, 38.30 + 4));
+        lineArr2.push(new TYLngLat(114.08 + 4, 38.30 + 4));
+        lineArr2.push(new TYLngLat(115.08 + 4, 38.30 + 4));
+        lineArr2.push(new TYLngLat(116.08 + 4, 38.30 + 4));
+
+        for (var i = 0; i < 2; i++) {
+            var data = new TYLine();
+            data.isEdit = true;
+
+            data.lineId = "line" + i;
+            data.lineOpacity = .7;
+
+            if (i == 1) {
+                data.lineType = "solid";
+                data.lineWidth = 3;
+                data.lineColor = "red";
+            } else {
+                data.lineType = "dashed";
+                data.lineColor = "blue";
+                data.lineWidth = 15;
+                data.isEdit = false;
+            }
+            if (i == 0) data.lnglat = lineArr;
+            if (i == 1) data.lnglat = lineArr2;
+            dataArr.push(data)
+        }
+        var line = new TYLineOption();
+        line.lineData = dataArr;
+        line.lineState.isClearOverlay = true;
+        //实例化事件参数
+        var event = new TYOverlayEvent();
+        event.mouseEvent = TYEnumEvent.TY_CLICK;
+        event.mouseFunc = clickLine;
+        line.lineState.overlayEvent = event;
+        line.lineState.isSetView = true;
+        TYDrawLine(line);
+    }
+    TYAddMapEvent(new TYEventOptions({
+        event: TYEnumEvent.TY_RIGHTCLICK,
+        callback: addline
+    }))
+    addline();
+    function clickLine(e) {
+        alert("触发回调事件")
+        console.log(e)
+    }
+</script>
+</body>
+</html>
+
+

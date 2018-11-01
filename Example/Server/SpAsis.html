@@ -1,0 +1,332 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>空间计算</title>
+    <style type="text/css">
+        html, body {
+            padding: 0;
+            margin: 0;
+        }
+
+        #container {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+        }
+          #controls{
+            position:absolute;
+            left:100px;
+        }.amap-scale-middle {
+            height: 4px;
+        }
+
+        .amap-scale-edgeleft, .amap-scale-edgeright {
+            width: 4px;
+        }
+    </style>
+    <script src="../../Scripts/TYMapAPI_JavaScript.min.js"></script>
+    <script src="../../Scripts/jquery-1.9.1.min.js"></script>
+    <link href="../../Content/bootstrap.min.css" rel="stylesheet" />
+</head>
+<body style="overflow:hidden">
+    <div id="container"></div>
+   
+    <div id="codes" style=" position:absolute; bottom:0; width:100%; height:290px;display:none">
+        <table class="table table-condensed">
+            <tr><th>代码</th></tr>
+            <tr>
+                <td>
+                    <textarea class="form-control" style="width:100%;height:250px;">
+                        <!DOCTYPE html>
+                        <html xmlns="http://www.w3.org/1999/xhtml">
+
+                        <head>
+                            <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+                            <title>空间计算</title>
+                            <style type="text/css">
+                                html, body {
+                                    padding: 0;
+                                    margin: 0;
+                                }
+
+                                #container {
+                                    width: 100%;
+                                    height: 100%;
+                                    position: absolute;
+                                }
+
+                                .amap-scale-middle {
+                                    height: 4px;
+                                }
+
+                                .amap-scale-edgeleft, .amap-scale-edgeright {
+                                    width: 4px;
+                                }
+                            </style>
+                            <script src="../TYMapAPI_JavaScript.min.js"></script>
+                        </head>
+
+                        <body>
+                            <div id="container"></div>
+
+                            <div class=" col-lg-5  form-inline  text-right" style="position:absolute; right:20px; top:70px;">
+                                <button type="button" class="btn btn-default btn-sm" onclick="setType(1)">计算线的距离</button>
+                                <button type="button" class="btn btn-default btn-sm" onclick="setType(2)">计算点是否在多边形内</button>
+                                <button type="button" class="btn btn-default btn-sm" onclick="setType(3)">测量面的面积</button>
+
+                            </div>
+                            <script type="text/javascript">
+                                var option = new TYMapOptions({
+                                    contentId: "container",//必填，地图容器
+                                    lnglat: new TYLngLat(114.50, 38.000),//可选 默认ip定位
+                                    mapLevel: 12//可选默认 12
+                                });
+                                TYInitialize(option);
+
+                                //------地图配置------//
+                                TYMapConfig(new TYConfigOption());
+
+                                //多边形面积
+                                var sp = new TYSpasisOptions();
+                                function setType(type) {
+                                    switch (type) {
+                                        case 1:
+                                            var arr = [];
+                                            var a = new TYLngLat(113.10, 38.1);
+                                            arr.push(a)
+                                            var b = new TYLngLat(120.10, 37.10);
+                                            arr.push(b)
+                                            var c = new TYLngLat(126.10, 39.10);
+                                            arr.push(c)
+                                            var d = [];
+                                            var data = new TYLine();
+                                            data.lineId = "line";
+                                            data.lnglat = arr;
+                                            d.push(data);
+                                            var line = new TYLineOption();
+                                            line.lineData = d;
+                                            TYDrawLine(line);
+
+                                            sp.polyLine = arr;
+                                            sp.sisType = TYEnumSpAsis.LINE_SIS;
+                                            var ar = TYSpAsis(sp);
+                                            alert(ar)
+                                            break;
+                                        case 2:
+                                            var arr = [[113.10, 38.10], [114.10, 38.10], [115.10, 38.10], [116.10, 39.10]];
+                                            var path = [];
+                                            for (var i = 0; i < arr.length; i++) {
+                                                path.push(new TYLngLat(arr[i][0], arr[i][1]));
+                                            }
+                                            var p = [];
+                                            var data = new TYPolygon();
+                                            data.lnglat = path;
+                                            data.polygonId = "poly";
+                                            p.push(data);
+                                            var polygon = new TYPolygonOption();
+                                            polygon.polygonData = p;
+                                            //实例化事件参数
+                                            TYDrawPolygon(polygon);
+
+
+                                            var data = [];
+                                            var p = new TYMarker({
+                                                pointId: "divid",
+                                                label: new TYLabel({
+                                                    content: "<span style='color:red;'>确定点位置</span>",
+                                                    offset: new TYPixel(25, 15)
+                                                }),
+                                                lnglat: new TYLngLat(114.90, 38.2),
+                                                icon: new TYIcon()
+                                            });
+                                            data.push(p);
+
+                                            var pointobj = new TYPointOption();
+                                            pointobj.pointData = data;
+                                            pointobj.pointState.isClearOverlay = false;
+                                            //绘制函数
+                                            TYDrawPoint(pointobj);
+
+                                            sp.point = new TYLngLat(114.90, 38.2);
+                                            sp.polyGon = path;
+                                            sp.sisType = TYEnumSpAsis.P_PGON;
+                                            var arr = TYSpAsis(sp);
+                                            alert(arr);
+                                            break;
+                                        case 3:
+                                            var arr = [];
+                                            var a = new TYLngLat(113.10, 38.1);
+                                            arr.push(a)
+                                            var b = new TYLngLat(114.10, 39.10);
+                                            arr.push(b)
+                                            var c = new TYLngLat(111.10, 39.10);
+                                            arr.push(c)
+                                            var p = [];
+                                            var data = new TYPolygon();
+                                            data.lnglat = arr;
+                                            data.polygonId = "poly";
+                                            p.push(data);
+                                            var polygon = new TYPolygonOption();
+                                            polygon.polygonData = p;
+                                            //实例化事件参数
+                                            TYDrawPolygon(polygon);
+                                            sp.polyGon = arr;
+                                            sp.sisType = TYEnumSpAsis.PLOYGON_SIS;
+                                            var area = TYSpAsis(sp);
+
+                                            alert(area)
+                                            break;
+                                    }
+
+                                }
+                            </script>
+                        </body>
+
+                    </html>
+                </textarea>
+
+            </td>
+        </tr>
+    </table>
+</div>
+
+<div></div>
+<div id="codeshow" data="0" class="btn btn-default" style="position:absolute; right:20px; top:20px;font-family:Helvetica, 'Hiragino Sans GB', 'Microsoft Yahei', '微软雅黑', Arial;"><span class=" glyphicon glyphicon-eye-open"></span> 查看源码</div>
+    <div class=" col-lg-5  form-inline  text-right" style="position:absolute; right:20px; top:70px;">
+        <button type="button" class="btn btn-default btn-sm" onclick="setType(1)">计算线的距离</button>
+        <button type="button" class="btn btn-default btn-sm" onclick="setType(2)">计算点是否在多边形内</button>
+        <button type="button" class="btn btn-default btn-sm" onclick="setType(3)">测量面的面积</button>
+      
+    </div>
+
+
+<script>
+    $(document).ready(function () {
+        $("#codeshow").click(function () {
+            var he = $("#container").css("height");
+            var hei = he.split("px")[0];
+            if ($("#codeshow").attr("data") == "0") {
+                $("#container").css("height", (parseInt(hei) - 300) + "px");
+                $("#codes").css("display", "block")
+                $("#codeshow").removeClass("btn-default").addClass("btn-success");
+                $("#codeshow").attr("data", "1")
+            } else {
+                $("#container").css("height", (parseInt(hei) + 300) + "px");
+                $("#codes").css("display", "none")
+                $("#codeshow").removeClass("btn-success").addClass("btn-default");
+                $("#codeshow").attr("data", "0")
+            }
+
+        })
+    })
+</script>
+<script type="text/javascript">
+    var option = new TYMapOptions({
+        contentId: "container",//必填，地图容器
+        lnglat: new TYLngLat(114.50, 38.000),//可选 默认ip定位
+        mapLevel: 12//可选默认 12
+    });
+    TYInitialize(option);
+
+    //------地图配置------//
+    TYMapConfig(new TYConfigOption());
+
+    //多边形面积
+    var sp = new TYSpasisOptions();
+    function setType(type) {
+        switch (type) {
+            case 1:
+                var arr = [];
+                var a = new TYLngLat(113.10, 38.1);
+                arr.push(a)
+                var b = new TYLngLat(120.10, 37.10);
+                arr.push(b)
+                var c = new TYLngLat(126.10, 39.10);
+                arr.push(c)
+                var d = [];
+                var data = new TYLine();
+                data.lineId = "line";
+                data.lnglat = arr;
+                d.push(data);
+                var line = new TYLineOption();
+                line.lineData = d;
+                TYDrawLine(line);
+
+                sp.polyLine = arr;
+                sp.sisType = TYEnumSpAsis.LINE_SIS;
+                var ar = TYSpAsis(sp);
+                alert(ar)
+                break;
+            case 2:
+                var arr = [[113.10, 38.10], [114.10, 38.10], [115.10, 38.10], [116.10, 39.10]];
+                var path = [];
+                for (var i = 0; i < arr.length; i++) {
+                    path.push(new TYLngLat(arr[i][0], arr[i][1]));
+                }
+                var p = [];
+                var data = new TYPolygon();
+                data.lnglat = path;
+                data.polygonId = "poly";
+                p.push(data);
+                var polygon = new TYPolygonOption();
+                polygon.polygonData = p;
+                //实例化事件参数
+                TYDrawPolygon(polygon);
+
+
+                var data = [];
+                var p = new TYMarker({
+                    pointId: "divid",
+                    label: new TYLabel({
+                        content: "<span style='color:red;'>确定点位置</span>",
+                        offset: new TYPixel(25, 15)
+                    }),
+                    lnglat: new TYLngLat(114.90, 38.2),
+                    icon: new TYIcon()
+                });
+                data.push(p);
+
+                var pointobj = new TYPointOption();
+                pointobj.pointData = data;
+                pointobj.pointState.isClearOverlay = false;
+                //绘制函数
+                TYDrawPoint(pointobj);
+
+                sp.point = new TYLngLat(114.90, 38.2);
+                sp.polyGon = path;
+                sp.sisType = TYEnumSpAsis.P_PGON;
+                var arr = TYSpAsis(sp);
+                alert(arr);
+                break;
+            case 3:
+                var arr = [];
+                var a = new TYLngLat(113.10, 38.1);
+                arr.push(a)
+                var b = new TYLngLat(114.10, 39.10);
+                arr.push(b)
+                var c = new TYLngLat(111.10, 39.10);
+                arr.push(c)
+                var p = [];
+                var data = new TYPolygon();
+                data.lnglat = arr;
+                data.polygonId = "poly";
+                p.push(data);
+                var polygon = new TYPolygonOption();
+                polygon.polygonData = p;
+                //实例化事件参数
+                TYDrawPolygon(polygon);
+                sp.polyGon = arr;
+                sp.sisType = TYEnumSpAsis.PLOYGON_SIS;
+                var area = TYSpAsis(sp);
+
+                alert(area)
+                break;
+        }
+
+    }
+</script>
+</body>
+</html>
+
+

@@ -1,0 +1,173 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title></title>
+    <style>
+        html, body {
+            margin: 0;
+            padding: 0;
+        }
+
+        #container {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+        }   .amap-scale-middle {
+            height: 4px;
+        }
+
+        .amap-scale-edgeleft, .amap-scale-edgeright {
+            width: 4px;
+        }
+    </style>
+    <script src="../../Scripts/TYMapAPI_JavaScript.min.js"></script>
+    <script src="../../Scripts/jquery-1.9.1.min.js"></script>
+    <link href="../../Content/bootstrap.min.css" rel="stylesheet" />
+    <script>
+        $(document).ready(function () {
+            $("#codeshow").click(function () {
+                var he = $("#container").css("height");
+                var hei = he.split("px")[0];
+
+                if ($("#codeshow").attr("data") == "0") {
+                    $("#container").css("height", (parseInt(hei) - 300) + "px");
+                    $("#codes").css("display", "block")
+                    $("#codeshow").removeClass("btn-default").addClass("btn-success");
+                    $("#codeshow").attr("data", "1")
+                } else {
+                    $("#container").css("height", (parseInt(hei) + 300) + "px");
+                    $("#codes").css("display", "none")
+                    $("#codeshow").removeClass("btn-success").addClass("btn-default");
+                    $("#codeshow").attr("data", "0")
+                }
+
+            })
+        })
+    </script>
+</head>
+<body style=" overflow:hidden">
+
+    <div id="container"></div>
+
+    <div id="codes" style=" position:absolute; bottom:0; width:100%; height:290px;display:none">
+        <table class="table table-condensed">
+            <tr class=" active"><th>代码</th></tr>
+            <tr>
+                <td>
+                    <textarea class="form-control" style=" height:250px; width:100%; border:0">
+                        <!DOCTYPE html>
+                        <html xmlns="http://www.w3.org/1999/xhtml">
+                        <head>
+                            <script src="../TYMapAPI_JavaScript.min.js"></script>
+                            <style>
+                                #container {
+                                    position: absolute;
+                                    width: 100%;
+                                    height: 100%;
+                                }
+                            </style>
+
+                        </head>
+                        <body>
+                            <div id="container"></div>
+                            <div id="panel" style="position:absolute; right:20px; top:60px; "></div>
+                        </body>
+                        <script>
+                            //------地图初始化------//
+                            var json = new TYMapOptions();
+                            json.contentId = "container";
+                            //json.lnglat= new TYLngLat(114.09,38.30);
+                            TYInitialize(json);
+                            //------------------------------//
+
+                            //------地图配置------//
+                            TYMapConfig(new TYConfigOption());
+                            //------------------------------//
+
+                            //------天气查看------//
+
+                            var w = new TYWeatherOptions({
+                                district: "石家庄",//传入“石家庄”或行政编码“130100”都可查询
+                                callback: setvalue//回调函数
+                            })
+                            TYWeather(w);//执行
+
+
+                            //回调函数
+                            function setvalue(e) {
+                                console.log(e);//F12查看返回参数
+                                var html = "";
+                                if (e.status) {
+                                    html += "地区:" + e.city + "<br>";
+                                    html += "天气:" + e.weather + "<br>";
+                                    html += "湿度:" + e.humidity + "<br>";
+                                    html += "温度:" + e.temperature + "<br>";
+                                    html += "风向:" + e.windDirection + "<br>";
+                                    html += "风力:" + e.windPower + "<br>";
+                                    html += "时刻:" + e.reportTime + "<br>";
+                                } else {
+                                    html = "获取失败";
+                                }
+                                document.getElementById("panel").innerHTML = html;
+                            }
+                            //------------------------------//
+                        </script>
+                    </html>
+
+                </textarea>
+            </td>
+        </tr>
+    </table>
+</div>
+<button id="codeshow" data="0" class="btn btn-default" style="position:absolute; right:20px; top:20px;"><span class=" glyphicon glyphicon-eye-open"></span> 查看源码</button>
+<div class=" col-lg-5  form-inline  text-right" style="position:absolute; right:20px; top:60px;">
+    <input class="form-control input-sm" id="ll1" type="text" value="石家庄" />
+    <button class="btn btn-default btn-sm" onclick="myfunction()">查询</button>
+</div>
+<div id="panel" class="alert alert-success" style="position:absolute; left:100px; top:20px; ">
+    <label>提示：</label>1.请输入“石家庄”或区域编码“130100”信息，获取天气
+</div>
+
+<script>
+
+    //------地图初始化------//
+    var json = new TYMapOptions();
+    json.contentId = "container";
+    //json.mapLevel = 16;
+    json.lnglat = new TYLngLat(114.35, 38.266);
+    TYInitialize(json);
+    //------------------------------//
+
+    //------地图配置------//
+    TYMapConfig(new TYConfigOption());
+
+    function myfunction(val) {
+        var ll1 = document.getElementById("ll1").value;
+        var w = new TYWeatherOptions({
+            district: ll1,
+            callback: setvalue
+        })
+        TYWeather(w);
+    }
+
+    //获取点击坐标
+    function setvalue(e) {
+        console.log(e);
+        var html = "";
+        if (e.status) {
+            html += "地区:" + e.city + "<br>";
+            html += "天气:" + e.weather + "<br>";
+            html += "湿度:" + e.humidity + "<br>";
+            html += "温度:" + e.temperature + "<br>";
+            html += "风向:" + e.windDirection + "<br>";
+            html += "风力:" + e.windPower + "<br>";
+            html += "时刻:" + e.reportTime + "<br>";
+        } else {
+            html = "获取失败";
+        }
+        document.getElementById("panel").innerHTML = html;
+    }
+</script>
+</body>
+</html>

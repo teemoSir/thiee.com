@@ -1,0 +1,79 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8"/>
+    <title>瓦片切换</title>
+    <style>
+        html, body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden
+        }
+
+        .container {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+        }
+    /*    .button{
+            padding: 15px;
+        }
+        .button button{
+            padding: 5px;
+        }*/
+
+    </style>
+    <script src="../../Scripts/MapAPI_JavaScript.min.js"></script>
+</head>
+<body >
+
+<div id="container" class="container"></div>
+
+<div class="btn-group button">
+    <button class="btn btn-default  btn-sm" onclick="DiTu(TYEnumMapType.TY_GD_VEC)">高德标准</button>
+    <button class="btn btn-default btn-sm" onclick="DiTu(TYEnumMapType.TY_GD_IMG)">高德卫星</button>
+    <button class="btn btn-default btn-sm" onclick="DiTu(TYEnumMapType.TY_QQ_VEC)">腾讯标准</button>
+    <button class="btn btn-default btn-sm" onclick="DiTu(TYEnumMapType.TY_QQ_IMG)">腾讯卫星</button>
+    <button class="btn btn-default btn-sm" onclick="DiTu(TYEnumMapType.TY_QQ_Land)">腾讯地形</button>
+    <button class="btn btn-default btn-sm" onclick="DiTu(TYEnumMapType.TY_360_VEC)">360标准</button>
+    <button class="btn btn-default btn-sm" onclick="DiTu(TYEnumMapType.TY_360_IMG)">360卫星</button>
+    <button class="btn btn-default btn-sm" onclick="DiTu(TYEnumMapType.TY_Google_VEC)">谷歌标准</button>
+    <button class="btn btn-default btn-sm" onclick="DiTu(TYEnumMapType.TY_Google_IMG)">谷歌卫星</button>
+    <button class="btn btn-default btn-sm" onclick="DiTu(TYEnumMapType.TY_Google_Land)">谷歌地形</button>
+    <button class="btn btn-default btn-sm" onclick="DiTu(TYEnumMapType.TY_TDT_VEC)">天地图标准</button>
+    <button class="btn btn-default btn-sm" onclick="DiTu(TYEnumMapType.TY_TDT_IMG)">天地图卫星</button>
+</div>
+
+<script>
+
+    // 地图初始化
+    var json = new TYMapOptions();
+    json.contentId = "container";
+    json.lnglat = new TYLngLat(114.09, 38.30);
+    TYInitialize(json);
+
+    /*
+     TY_OL_OSM // OL3地图
+     TY_OL_Land // OL3地形图
+     TY_GD_VEC // 高德地图
+     TY_GD_IMG // 高德卫星地图
+     TY_QQ_VEC //腾讯地图
+     TY_QQ_IMG //腾讯卫星地图
+     TY_QQ_Land // 腾讯地形图
+     TY_360_VEC //360地图
+     TY_360_IMG //360卫星地图
+     TY_Google_VEC //谷歌地图
+     TY_Google_IMG // 谷歌卫星地图
+     TY_Google_Land ,//谷歌地形图
+     TY_TDT_VEC //天地图
+     TY_TDT_IMG //天地图卫星图层
+     */
+    DiTu(TYEnumMapType.TY_Google_IMG)
+
+    function DiTu(tileKey){
+        var tile = new TYTilesOptions(tileKey);//图层入参
+        TYMapTiles(tile);//执行构造函数
+    }
+</script>
+</body>
+</html>

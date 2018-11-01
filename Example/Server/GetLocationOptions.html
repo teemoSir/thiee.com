@@ -1,0 +1,202 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>正地理编码</title>
+    <style type="text/css">
+        html, body {
+            padding: 0;
+            margin: 0;
+        }
+
+        #container {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+        }.amap-scale-middle {
+            height: 4px;
+        }
+
+        .amap-scale-edgeleft, .amap-scale-edgeright {
+            width: 4px;
+        }
+       
+    </style>
+    <script src="../../Scripts/TYMapAPI_JavaScript.min.js"></script>
+    <script src="../../Scripts/jquery-1.9.1.min.js"></script>
+    <link href="../../Content/bootstrap.min.css" rel="stylesheet" />
+
+</head>
+<body style="overflow:hidden">
+    <div id="container"></div>
+    <div id="c" class="alert alert-success " style="position:absolute; left:100px; top:20px; ">
+      
+    </div>
+    <div id="codes" style=" position:absolute; bottom:0; width:100%; height:290px;display:none">
+        <table class="table table-condensed">
+            <tr><th>代码</th></tr>
+            <tr>
+                <td>
+                    <textarea class="form-control" style="width:100%;height:250px;">
+                        <!DOCTYPE html>
+                        <html xmlns="http://www.w3.org/1999/xhtml">
+
+                        <head>
+                            <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+                            <title>正地理编码</title>
+                            <style type="text/css">
+                                html, body {
+                                    padding: 0;
+                                    margin: 0;
+                                }
+
+                                #container {
+                                    width: 100%;
+                                    height: 100%;
+                                    position: absolute;
+                                }
+                                 #controls{
+            position:absolute;
+        }
+                                   .amap-scale-middle{ height:4px }.amap-scale-edgeleft, .amap-scale-edgeright{width:4px}
+                            </style>
+                            <script src="../TYMapAPI_JavaScript.min.js"></script>
+                        </head>
+
+                        <body>
+                            <div id="container"></div>
+                            <div id="controls" class=" col-lg-3  form-inline  text-right">
+                                <input type="text" class="form-control input-sm" value="石家庄高新区天远科技" id="g" />
+                                <input type="button" class="btn btn-default" onclick="geo()" value="点击查询" />
+
+                            </div>
+                            <script type="text/javascript">
+                                var option = new TYMapOptions({
+                                    contentId: "container",//必填，地图容器
+                                    lnglat: new TYLngLat(114.5, 38.0),//可选 默认ip定位
+                                    mapLevel: 12//可选默认 12
+                                });
+                                TYInitialize(option);
+                                //------地图配置------//
+                                TYMapConfig(new TYConfigOption());
+                                geo();
+                                function geo() {
+                                    var geo = new TYGetLocationOptions();//正向地理编码参数实例化
+                                    geo.callback = geoLocation;//回调函数
+                                    geo.address = $("#g").val();//
+                                    TYGetLocation(geo);
+                                }
+                                function geoLocation(e) {
+                                    console.log("正向地理编码调用了回调")
+
+                                    $("#c").html("<div >" + e.geocodes[0].adress + "<br/> 省份："
+                                                    + e.geocodes[0].province + "<br/>城市："
+                                                      + e.geocodes[0].city + "<br/>城市编码："
+                                                      + e.geocodes[0].citycode + "<br/>区："
+                                                      + e.geocodes[0].district + "<br/>地理经纬度："
+                                                      + e.geocodes[0].GPSLngLat.GPSLng + "," + e.geocodes[0].GPSLngLat.GPSLat + "<br/>代码："
+                                                      + e.geocodes[0].acode + "<br/>城镇："
+                                                      + e.geocodes[0].township + "<br/>街道："
+                                                      + e.geocodes[0].street + "<br/></span>");
+                                    var data = [];
+                                    var p = new TYMarker({
+                                        pointId: "divid",
+                                        lnglat: new TYLngLat(e.geocodes[0].GPSLngLat.GPSLng, e.geocodes[0].GPSLngLat.GPSLat),
+                                        icon: new TYIcon()
+                                    });
+                                    data.push(p);
+
+                                    var pointobj = new TYPointOption();
+                                    pointobj.pointData = data;
+                                    pointobj.pointState.isClearOverlay = true;
+                                    //绘制函数
+                                    TYDrawPoint(pointobj);
+                                }
+                            </script>
+
+                        </body>
+
+                    </html>
+                </textarea>
+
+            </td>
+        </tr>
+    </table>
+</div>
+
+
+<div id="codeshow" data="0" class="btn btn-default" style="position:absolute; right:20px; top:20px;font-family:Helvetica, 'Hiragino Sans GB', 'Microsoft Yahei', '微软雅黑', Arial;"><span class=" glyphicon glyphicon-eye-open"></span> 查看源码</div>
+  
+    <div id="controls" class=" col-lg-5  form-inline  text-right" style="position:absolute; right:20px; top:70px;">
+        <input type="text" class="form-control input-sm" value="石家庄高新区天远科技" id="g" />
+        <input type="button" class="btn btn-default btn-sm" onclick="geo()" value="点击查询" />
+
+    </div>
+
+<script>
+        $(document).ready(function () {
+            $("#codeshow").click(function () {
+                var he = $("#container").css("height");
+                var hei = he.split("px")[0];
+                if ($("#codeshow").attr("data") == "0") {
+                    $("#container").css("height", (parseInt(hei) - 300) + "px");
+                    $("#codes").css("display", "block")
+                    $("#codeshow").removeClass("btn-default").addClass("btn-success");
+                    $("#codeshow").attr("data", "1")
+                } else {
+                    $("#container").css("height", (parseInt(hei) + 300) + "px");
+                    $("#codes").css("display", "none")
+                    $("#codeshow").removeClass("btn-success").addClass("btn-default");
+                    $("#codeshow").attr("data", "0")
+                }
+
+            })
+        })
+</script>
+<script type="text/javascript">
+    var option = new TYMapOptions({
+        contentId: "container",//必填，地图容器
+        lnglat: new TYLngLat(114.5, 38.0),//可选 默认ip定位
+        mapLevel: 12//可选默认 12
+    });
+    TYInitialize(option);
+    //------地图配置------//
+    TYMapConfig(new TYConfigOption());
+    geo();
+    function geo() {
+        var geo = new TYGetLocationOptions();
+        geo.callback = geoLocation;
+        geo.address =$("#g").val();
+        TYGetLocation(geo);
+    }
+        function geoLocation(e) {
+            console.log("正向地理编码调用了回调")
+         
+            $("#c").html("<div >" + e.geocodes[0].adress + "<br/> 省份："
+                            + e.geocodes[0].province + "<br/>城市："
+                              + e.geocodes[0].city + "<br/>城市编码："
+                              + e.geocodes[0].citycode + "<br/>区："
+                              + e.geocodes[0].district + "<br/>地理经纬度："
+                              + e.geocodes[0].GPSLngLat.GPSLng + "," + e.geocodes[0].GPSLngLat.GPSLat + "<br/>代码："
+                              + e.geocodes[0].acode + "<br/>城镇："
+                              + e.geocodes[0].township + "<br/>街道："
+                              + e.geocodes[0].street + "<br/></span>");
+            var data = [];
+            var p = new TYMarker({
+                pointId: "divid",
+                lnglat: new TYLngLat(e.geocodes[0].GPSLngLat.GPSLng, e.geocodes[0].GPSLngLat.GPSLat),
+                icon: new TYIcon()
+            });
+            data.push(p);
+
+            var pointobj = new TYPointOption();
+            pointobj.pointData = data;
+            pointobj.pointState.isClearOverlay = true;
+            //绘制函数
+            TYDrawPoint(pointobj);
+        }
+</script>
+</body>
+</html>
+
+

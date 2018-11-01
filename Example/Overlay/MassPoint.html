@@ -1,0 +1,320 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title></title>
+    <style>
+        html, body {
+            margin: 0;
+            padding: 0;
+        }
+
+        #container {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+        }   .amap-scale-middle {
+            height: 4px;
+        }
+
+    </style>
+
+    <script src="../../Scripts/MapAPI_JavaScript.js"></script>
+    <script src="../../Scripts/jquery-1.9.1.min.js"></script>
+    <link href="../../Content/bootstrap.min.css" rel="stylesheet" />
+    <script src="../../Scripts/massdata.js"></script>
+    <script>
+        $(document).ready(function () {
+            $("#codeshow").click(function () {
+                var he = $("#container").css("height");
+                var hei = he.split("px")[0];
+
+                if ($("#codeshow").attr("data") == "0") {
+                    $("#container").css("height", (parseInt(hei) - 300) + "px");
+                    $("#codes").css("display", "block")
+                    $("#codeshow").removeClass("btn-default").addClass("btn-success");
+                    $("#codeshow").attr("data", "1")
+                } else {
+                    $("#container").css("height", (parseInt(hei) + 300) + "px");
+                    $("#codes").css("display", "none")
+                    $("#codeshow").removeClass("btn-success").addClass("btn-default");
+                    $("#codeshow").attr("data", "0")
+                }
+
+            })
+        })
+    </script>
+</head>
+<body style=" overflow:hidden">
+
+    <div id="container"></div>
+    <div id="codes" style=" position:absolute; bottom:0; width:100%; height:290px;display:none">
+        <table class="table table-condensed">
+            <tr class=" active"><th>代码</th></tr>
+            <tr>
+                <td>
+                    <textarea class="form-control" style=" height:250px; width:100%; border:0">
+                        <!DOCTYPE html>
+                        <html xmlns="http://www.w3.org/1999/xhtml">
+                        <head>
+                            <script src="../MapAPI_JavaScript.min.js"></script>
+                            <script src="../massdata.js"></script>
+                            <style>
+                                #container {
+                                    position: absolute;
+                                    width: 100%;
+                                    height: 100%;
+                                }
+                            </style>
+                        </head>
+                        <body>
+                            <div id="container"></div>
+                            <button class="btn btn-default" style="position:absolute; right:20px; top:60px;" onclick="toggleAdd()">加载海量点</button>
+                            <div class="alert alert-success" style="position:absolute; left:100px; top:20px; ">
+                                <label>提示：</label>
+                                1.点击海量点图标触发回调
+                            </div>
+                            <div id="pannel" class="text-right" style="right:20px; top:100px;position:absolute;">
+                                <select id="countNum" class=" form-control " onchange="toggleAdd()">
+                                    <option value="1">5千点</option>
+                                    <option value="2">1万点</option>
+
+                                </select>
+                                <select id="style" class="form-control" onchange="toggleSetSelect()">
+                                    <option value="TYEnumMassShape.TY_MASS_STAR">五角星</option>
+                                    <option value="TYEnumMassShape.TY_MASS_CIRCLE">圆点</option>
+                                    <option value="TYEnumMassShape.TY_MASS_RECT">正方形</option>
+                                    <option value="TYEnumMassShape.TY_MASS_BULLE">气泡</option>
+                                    <option value="TYEnumMassShape.TY_MASS_CUSTOM">自定义图片</option>
+                                </select>
+                                <select id="color" class="form-control" onchange="toggleAdd()">
+                                    <option value="#F54312" selected="">橘色</option>
+                                    <option value="#0000ff">蓝色</option>
+                                    <option value="#00ff00">绿色</option>
+                                </select>
+
+                                <select id="size" class="form-control" onchange="toggleAdd()">
+                                    <option value="TYEnumMassSize.TY_MASS_SMALL">小</option>
+                                    <option value="TYEnumMassSize.TY_MASS_MIDDLE">中</option>
+                                    <option value="TYEnumMassSize.TY_MASS_BIG">大</option>
+                                    <option value="TYEnumMassSize.TY_MASS_SUPERBIG">超大</option>
+                                </select>
+                                <select id="alpha" class="form-control" onchange="toggleAdd()">
+                                    <option value="1">不透明</option>
+                                    <option value="0.5">半透明</option>
+                                    <option value="0.1">几乎透明</option>
+                                </select>
+                                <input type="button" class="btn btn-default" value="删除海量点" onclick="TYMassClear()">
+                            </div>
+                        </body>
+                        <script>
+
+                            //------地图初始化------//
+                            var json = new TYMapOptions();
+                            json.contentId = "container";
+                            //json.lnglat= new TYLngLat(114.09,38.30);
+                            TYInitialize(json);
+                            //------------------------------//
+
+                            //------地图配置------//
+                            TYMapConfig(new TYConfigOption());
+                            //------------------------------//
+
+                            //------地图配置------//
+                            function toggleSetSelect() {
+                                var style = eval(document.getElementById("style").value);
+
+                                if (style == 1) {
+                                    color.disabled = size.disabled = "true";
+                                    color.style.backgroundColor = size.style.backgroundColor = "#797777";
+                                } else {
+                                    color.disabled = size.disabled = null;
+                                    color.style.backgroundColor = size.style.backgroundColor = "#ffffff";
+                                }
+                                toggleAdd();
+                            }
+                            function toggleAdd() {
+
+                                var count = document.getElementById("countNum").value;//获取加载数量
+                                var color = document.getElementById("color").value;//获取设定颜色值
+                                var style = eval(document.getElementById("style").value);//获取海量点类型
+                                var size = eval(document.getElementById("size").value);//获取海量点大小
+                                var alpha = Number(document.getElementById("alpha").value);//获取海量点整体透明度
+
+                                var datas = [];  // 添加海量点数据
+
+                                //定义入参的对象数组
+                                for (var i = 0; i < count; i++) {
+                                    for (var j = 0; j < data.data.length; j++) {
+                                        var md = new MassPoint({
+                                            id: i * j, //id
+                                            lng: data.data[j][0] + Math.random() * 0.01,//gps 类型经度
+                                            lat: data.data[j][1] + Math.random() * 0.01,//gps类型纬度
+                                            color: color,//点颜色 只支持16进制 例如#00ff00
+                                            type: style,//点样式  枚举
+                                            size: size,//点尺寸  枚举
+                                            opacity: alpha// 透明度 0-1
+                                        });
+                                        if (style == "TYEnumMassShape.TY_MASS_CUSTOM") {
+                                            md.url = "http://webapi.amap.com/theme/v1.3/markers/n/mark_b.png";
+                                        }
+                                        datas.push(md);
+                                    }
+                                }
+                                //海量点点入参
+                                var option = new TYMassPointOption({
+                                    massPointDatas: datas,//点对象数组
+                                    massPointState: {
+                                        isClearOverlay: true,//是否清除地图
+                                        overlayEvent: new TYOverlayEvent({
+                                            mouseEvent: TYEnumEvent.TY_CLICK,//触发回调函数的事件
+                                            mouseFunc: setvalue//回调函数
+                                        })
+                                    }
+                                })
+                               TYMassPoint(option);//执行
+                            }
+                            function setvalue(e) {
+                                console.log(e);//F12查看返回值
+                                var windowo = new TYInfoWindowOptions();
+                                windowo.width = 300;
+                                windowo.height = 200;
+                                windowo.offset = -30;
+                                windowo.content = "<div style='width:200px;height:200px;'>经纬度：" + e.GPSlng.toFixed(6) + ',' + e.GPSlat.toFixed(6) + ',<br/>ID:' + e.id + ',<br/>颜色：' + e.color + ',<br/>形状：' + e.type + ',<br/>尺寸：' + e.size + ',<br/>透明度：' + e.opacity + "</div>";
+                                windowo.position = new TYLngLat(e.GPSlng, e.GPSlat);
+                                windowo.showShadow = true;
+                                windowo.isCustom = false;
+                                windowo.enableCloseOnClick = true;
+                                TYInfoWindow(windowo);
+                            }
+                            //------------------------------//
+                        </script>
+                    </html>
+                </textarea>
+            </td>
+        </tr>
+    </table>
+</div>
+
+<button id="codeshow" data="0" class="btn btn-default" style="position:absolute; right:20px; top:20px;"><span class=" glyphicon glyphicon-eye-open"></span> 查看源码</button>
+<button class="btn btn-default" style="position:absolute; right:20px; top:60px;" onclick="toggleAdd(true)">加载海量点</button>
+<div class="alert alert-success" style="position:absolute; left:100px; top:20px; ">
+    <label>提示：</label><br />
+    1.点击海量点图标触发回调
+</div>
+<div id="pannel" class="text-right" style="right:20px; top:100px;position:absolute;">
+    <select id="countNum" class=" form-control " onchange="toggleAdd()">
+        <option value="1">5千点</option>
+        <option value="2">1万点</option>
+
+    </select>
+    <select id="style" class="form-control" onchange="toggleSetSelect()" style="margin-top:5px">
+        <option value="TYEnumMassShape.TY_MASS_STAR">五角星</option>
+        <option value="TYEnumMassShape.TY_MASS_CIRCLE">圆点</option>
+        <option value="TYEnumMassShape.TY_MASS_RECT">正方形</option>
+        <option value="TYEnumMassShape.TY_MASS_BULLE">气泡</option>
+        <option value="TYEnumMassShape.TY_MASS_CUSTOM">自定义图片</option>
+    </select>
+    <select id="color" class="form-control" onchange="toggleAdd()" style="margin-top:5px">
+        <option value="#F54312" selected="">橘色</option>
+        <option value="#0000ff">蓝色</option>
+        <option value="#00ff00">绿色</option>
+    </select>
+
+    <select id="size" class="form-control" onchange="toggleAdd()" style="margin-top:5px">
+        <option value="TYEnumMassSize.TY_MASS_SMALL">小</option>
+        <option value="TYEnumMassSize.TY_MASS_MIDDLE">中</option>
+        <option value="TYEnumMassSize.TY_MASS_BIG">大</option>
+        <option value="TYEnumMassSize.TY_MASS_SUPERBIG">超大</option>
+    </select>
+    <select id="alpha" class="form-control" onchange="toggleAdd()" style="margin-top:5px">
+        <option value="1">不透明</option>
+        <option value="0.5">半透明</option>
+        <option value="0.1">几乎透明</option>
+    </select>
+    <input type="button" class="btn btn-default" value="删除海量点" onclick="TYMassClear()" style="margin-top:5px">
+</div>
+<script>
+
+    //------地图初始化------//
+    var json = new TYMapOptions();
+    json.contentId = "container";
+    json.mapLevel=4;
+    json.lnglat= new TYLngLat(114.09,38.30);
+    TYInitialize(json);
+    //------------------------------//
+
+    //------地图配置------//
+    TYMapConfig(new TYConfigOption());
+
+    function toggleSetSelect() {
+        var style = eval(document.getElementById("style").value);
+
+        if (style == 1) {
+            color.disabled  = "true";
+            color.style.backgroundColor  = "#797777";
+        } else {
+            color.disabled  = null;
+            color.style.backgroundColor  = "#ffffff";
+        }
+        toggleAdd();
+    }
+    function toggleAdd(a) {
+
+    var b=false;
+        if(a)b=true;
+        var count = $("#countNum").val();//获取加载数量
+        var color = document.getElementById("color").value;//获取设定颜色值
+        var style = eval(document.getElementById("style").value);//获取海量点类型
+        var size = eval(document.getElementById("size").value);//获取海量点大小
+        var alpha = Number(document.getElementById("alpha").value);//获取海量点整体透明度
+
+        var datas = [];  // 添加海量点数据
+
+
+        for (var i = 0; i < count; i++) {
+            for (var j = 0; j < data.data.length; j++) {
+                var md = new MassPoint({
+                    id:"id"+ (i+1) * (j+1),
+                    lng: data.data[j][0] + Math.random() * 0.01,
+                    lat: data.data[j][1] + Math.random() * 0.01,
+                    color: color,//点颜色 只支持16进制 例如#00ff00
+                    type: style,//点样式  枚举
+                    size: size,//点尺寸  枚举
+                    opacity: alpha// 透明度 0-1
+                });
+                if (style == "TYEnumMassShape.TY_MASS_CUSTOM") {
+                    md.url = "http://webapi.amap.com/theme/v1.3/markers/n/mark_b.png";
+                }
+                datas.push(md);
+            }
+        }
+        var option = new TYMassPointOption({
+            massPointDatas: datas,
+            massPointState: {
+                isClearOverlay: true,
+                isSetView:b,
+                overlayEvent: new TYOverlayEvent({
+                    mouseEvent: TYEnumEvent.TY_CLICK,
+                    mouseFunc: setvalue
+                })
+            }
+        })
+        m = TYMassPoint(option);
+    }
+
+    function setvalue(e) {
+        var windowo = new TYInfoWindowOptions();
+        windowo.width = 300;
+        windowo.height = 200;
+
+        windowo.content = "<div style='width:200px;height:200px;'>经纬度：" + e.GPSlng.toFixed(6) + ',' + e.GPSlat.toFixed(6) + ',<br/>ID:' + e.id + ',<br/>颜色：' + e.color + ',<br/>形状：' + e.type + ',<br/>尺寸：' + e.size + ',<br/>透明度：' + e.opacity + "</div>";
+        windowo.position = new TYLngLat(e.GPSlng, e.GPSlat);
+        windowo.showShadow = true;
+        windowo.isCustom = false;
+        windowo.enableCloseOnClick = true;
+        TYInfoWindow(windowo);
+    }
+</script>
+</body>
+</html>

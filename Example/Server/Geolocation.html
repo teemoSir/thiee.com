@@ -1,0 +1,166 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>定位</title>
+    <style type="text/css">
+        html, body {
+            padding: 0;
+            margin: 0;
+        }
+
+        #container {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+        }
+
+        #controls {
+            position: absolute;
+            left: 100px;
+        }
+
+        .amap-scale-middle {
+            height: 4px;
+        }
+
+        .amap-scale-edgeleft, .amap-scale-edgeright {
+            width: 4px;
+        }
+    </style>
+    <script src="../../Scripts/TYMapAPI_JavaScript.min.js"></script>
+    <script src="../../Scripts/jquery-1.9.1.min.js"></script>
+    <link href="../../Content/bootstrap.min.css" rel="stylesheet" />
+
+</head>
+<body style="overflow:hidden">
+    <div id="container"></div>
+
+    <input type="button" class="btn  btn-default" style=" position:absolute;top:20px; left:100px" onclick="geo()" value="定位" />
+
+
+    <div id="codes" style=" position:absolute; bottom:0; width:100%; height:290px;display:none">
+        <table class="table table-condensed">
+            <tr><th>代码</th></tr>
+            <tr>
+                <td>
+                    <textarea class="form-control" style="width:100%;height:250px;">
+                        <!DOCTYPE html>
+                        <html xmlns="http://www.w3.org/1999/xhtml">
+
+                        <head>
+                            <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+                            <title>浏览器定位</title>
+                            <style type="text/css">
+                                html, body {
+                                    padding: 0;
+                                    margin: 0;
+                                }
+
+                                #container {
+                                    width: 100%;
+                                    height: 100%;
+                                    position: absolute;
+                                }
+
+                                #controls {
+                                    position: absolute;
+                                }
+                            </style>
+                            <script src="../TYMapAPI_JavaScript.min.js"></script>
+                        </head>
+
+                        <body>
+                            <div id="container"></div>
+                            <input type="button" class="btn  btn-default" style=" position:absolute;top:20px; left:100px" onclick="geo()" value="定位" />
+                            <script type="text/javascript">
+
+
+                                var option = new TYMapOptions({
+                                    contentId: "container",//必填，地图容器
+                                    lnglat: new TYLngLat(100.50, 38.000),//可选 默认ip定位
+                                    mapLevel: 12//可选默认 12
+                                });
+
+                                TYInitialize(option);
+                                //------地图配置------//
+                                TYMapConfig(new TYConfigOption());
+                                function geo() {
+                                    var n = new TYGeolocationOptions();//定位参数实例化
+                                    n.showMarker = true;
+                                    n.showCircle = true;
+                                    n.panToLocation = true;
+                                    n.callback = fake;
+                                    TYGeolocation(n);
+                                }
+
+                                setTimeout(geo(), 2000);
+                                function fake(e) {
+                                    alert('定位成功回调');
+                                }
+                            </script>
+                        </body>
+
+                    </html>
+                </textarea>
+
+            </td>
+        </tr>
+    </table>
+</div>
+
+<input type="hidden" id="x" value="" />
+<div id="codeshow" data="0" class="btn btn-default" style="position:absolute; right:20px; top:20px;font-family:Helvetica, 'Hiragino Sans GB', 'Microsoft Yahei', '微软雅黑', Arial;"><span class=" glyphicon glyphicon-eye-open"></span> 查看源码</div>
+
+
+<script>
+    $(document).ready(function () {
+        $("#codeshow").click(function () {
+            var he = $("#container").css("height");
+            var hei = he.split("px")[0];
+            if ($("#codeshow").attr("data") == "0") {
+                $("#container").css("height", (parseInt(hei) - 300) + "px");
+                $("#codes").css("display", "block")
+                $("#codeshow").removeClass("btn-default").addClass("btn-success");
+                $("#codeshow").attr("data", "1")
+            } else {
+                $("#container").css("height", (parseInt(hei) + 300) + "px");
+                $("#codes").css("display", "none")
+                $("#codeshow").removeClass("btn-success").addClass("btn-default");
+                $("#codeshow").attr("data", "0")
+            }
+
+        })
+    })
+</script>
+<script type="text/javascript">
+
+    var option = new TYMapOptions({
+        contentId: "container",//必填，地图容器
+        lnglat: new TYLngLat(100.50, 38.000),//可选 默认ip定位
+        mapLevel: 12//可选默认 12
+    });
+
+    TYInitialize(option);
+    //------地图配置------//
+    TYMapConfig(new TYConfigOption());
+    function geo() {
+        var n = new TYGeolocationOptions();
+        n.showMarker = true;
+        n.showCircle = true;
+        n.panToLocation = true;
+        n.callback = fake;
+        TYGeolocation(n);
+    }
+
+    setTimeout(geo(), 2000);
+
+
+    function fake(e) {
+        alert('定位成功回调');
+    }
+
+</script>
+
+</body>
+</html>

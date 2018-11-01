@@ -1,0 +1,262 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title></title>
+    <style>
+        html, body {
+            margin: 0;
+            padding: 0;
+        }
+
+        #container {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+        }   .amap-scale-middle {
+            height: 4px;
+        }
+
+        .amap-scale-edgeleft, .amap-scale-edgeright {
+            width: 4px;
+        }
+    </style>
+    <link href="../../Content/bootstrap.min.css" rel="stylesheet" />
+
+    <script src="../../Scripts/MapAPI_JavaScript.min.js"></script>
+    <script src="../../Scripts/jquery-1.9.1.min.js"></script>
+
+    <script src="../../Scripts/area.js"></script>
+    <script>
+        $(document).ready(function () {
+            $("#codeshow").click(function () {
+                var he = $("#container").css("height");
+                var hei = he.split("px")[0];
+
+                if ($("#codeshow").attr("data") == "0") {
+                    $("#container").css("height", (parseInt(hei) - 300) + "px");
+                    $("#codes").css("display", "block")
+                    $("#codeshow").removeClass("btn-default").addClass("btn-success");
+                    $("#codeshow").attr("data", "1")
+                } else {
+                    $("#container").css("height", (parseInt(hei) + 300) + "px");
+                    $("#codes").css("display", "none")
+                    $("#codeshow").removeClass("btn-success").addClass("btn-default");
+                    $("#codeshow").attr("data", "0")
+                }
+
+            })
+        })
+    </script>
+</head>
+<body style=" overflow:hidden">
+
+    <div id="container"></div>
+    <div id="codes" style=" position:absolute; bottom:0; width:100%; height:290px;display:none">
+        <table class="table table-condensed">
+            <tr class=" active"><th>代码</th></tr>
+            <tr>
+                <td>
+                    <textarea class="form-control" style=" height:250px; width:100%; border:0">
+                        <!DOCTYPE html>
+                        <html xmlns="http://www.w3.org/1999/xhtml">
+                        <head>
+                            <script src="../MapAPI_JavaScript.min.js"></script>
+                            <style>
+                                #container {
+                                    position: absolute;
+                                    width: 100%;
+                                    height: 100%;
+                                }
+                            </style>
+
+                        </head>
+                        <body>
+                            <div id="container"></div>
+                        </body>
+                        <script>
+                            //------地图初始化------//
+                            var json = new TYMapOptions();
+                            json.contentId = "container";
+                            //json.lnglat= new TYLngLat(114.09,38.30);
+                            TYInitialize(json);
+                            //------------------------------//
+
+                            //------地图配置------//
+                            TYMapConfig(new TYConfigOption());
+                            //------------------------------//
+
+                            //------行政渲染------//
+                            var y = new TYAreaRenderOption();
+                            var render = new renderData({
+                                renderId: "440000",//该地区的编码
+                                lnglat: new TYLngLat(113.281, 23.1252),//该地区的坐标，改坐标标注marker
+                                label: new TYLabel({//添加label对象
+                                    content: "南京",//显示内容
+                                    offset: new TYPixel(25, 5)//label偏移
+                                }),
+                                fillColor: "#ffff00",
+                                icon: "http://webapi.amap.com/theme/v1.3/markers/n/mark_b.png"
+                            });
+                            var render1 = new renderData({
+                                renderId: "450000",
+                                lnglat: new TYLngLat(108.32, 22.824),
+                                label: new TYLabel({
+                                    content: "广州",
+                                    offset: new TYPixel(25, 5)
+                                }),
+
+                                fillColor: "#ff0000",
+                                icon: "http://webapi.amap.com/theme/v1.3/markers/n/mark_b.png"
+                            })
+                            y.renderDatas.push(render);//renderDatas是一个对象数组，可以多个地区一次渲染，但限制只能同一级别。
+                            y.renderDatas.push(render1);
+                            y.renderState.tileOpacity = 1;//渲染的图层透明度0.1-1.0
+                            y.renderState.overlayEvent = new TYOverlayEvent({//加入地图事件对象
+                                mouseEvent: TYEnumEvent.TY_CLICK,//触发方式TYEnumEvent中有详细介绍
+                                mouseFunc: setvalue//触发的方法
+                            })
+                           
+                            TYAreaRender(y);//执行
+
+                            function setvalue(e) {
+                                alert("点击成功，触发了回调函数")
+                            }
+                            //------------------------------//
+                        </script>
+                    </html>
+
+
+
+
+                </textarea>
+            </td>
+        </tr>
+    </table>
+</div>
+
+<button id="codeshow" data="0" class="btn btn-default" style="position:absolute; right:20px; top:20px;"><span class=" glyphicon glyphicon-eye-open"></span> 查看源码</button>
+
+<button class="btn btn-default" style="position:absolute; right:20px; top:60px;" onclick="xuanran()">渲染</button>
+<div class=" form-inline " style="position:absolute; right:20px; top:100px;">
+    <table>
+        <tr>
+            <td>
+                <select class="form-control" id="s1">
+                    <option value="0">选择省</option>
+                </select>
+            </td>
+            <td>&nbsp;</td>
+            <td>
+                <select class="form-control" id="s2">
+                    <option>选择市</option>
+                </select>
+
+            </td>
+        </tr>
+    </table>
+</div>
+
+<div class="alert alert-success" style="position:absolute; left:100px; top:20px; "> <label>提示：</label> 1.点击渲染区域marker点图标触发回调</div>
+<script>
+    window.onload = function () {
+        for (var i = 0; i < province.length; i++) {
+            $("#s1").append("<option value='" + province[i].id + "' >" + province[i].name + "</option>");
+        }
+    }
+    $(document).ready(function () {
+        $("#s1").change(function () {
+            if ($(this).val()) {
+                var A3 = $(this).val().substring(0, 3);
+                var arr = [];
+                $("#s2 option").remove();
+                $("#s2").append("<option value=''>选择市</option>");
+                for (var i = 0; i < city.length; i++) {
+                    if (city[i].id.substring(0, 3) == A3) {
+                        $("#s2").append("<option value='" + city[i].lng + "," + city[i].lat + "," + city[i].id + "'>" + city[i].name + "</option>");
+                    }
+                }
+                //
+                for (var i = 0; i < province.length; i++) {
+                    if ($(this).val().trim() == province[i].id) {
+                        var arrGL = [];
+                        arrGL.push({
+                            "id": province[i].id,
+                            "name": province[i].name,
+                            "lnglat": new TYLngLat(parseFloat(province[i].lng), parseFloat(province[i].lat))
+                        });
+                        xuanran(arrGL);
+                      
+                    }
+                }
+
+            }
+        })
+        $("#s2").change(function () {
+
+            if ($(this).val()) {
+                var lnglat = $(this).val().split(',');
+                var name = "";
+                for (var i = 0; i < city.length; i++) {
+                    if (city[i].id.toString() == lnglat[2].toString()) {
+                        name = city[i].name;
+                        break;
+                    }
+                }
+
+                var arrGL = [];
+                arrGL.push({
+                    "id": lnglat[2],
+                    "name": name,
+                    "lnglat": new TYLngLat(parseFloat(lnglat[0]), parseFloat(lnglat[1]))
+                });
+                xuanran(arrGL);
+            }
+        });
+    })
+
+    //------地图初始化------//
+    var json = new TYMapOptions();
+    json.contentId = "container";
+    //json.lnglat= new TYLngLat(114.09,38.30);
+    TYInitialize(json);
+    //------------------------------//
+
+    //------地图配置------//
+    TYMapConfig(new TYConfigOption());
+
+    function xuanran(arr) {
+
+        var y = new TYAreaRenderOption();
+        var data = [];
+        // for (var i = 0; i < arr.length; i++) {
+        var render = new renderData({
+            renderId: arr[0].id,
+            lnglat: arr[0].lnglat,
+            label: new TYLabel({
+                content: arr[0].name,
+                offset: new TYPixel(30, 5)
+            }),
+            fillColor: "#ffff00",
+            icon: "../../Images/logo.png"
+        });
+        data.push(render);
+        // }
+        y.renderDatas = data;
+        y.renderState.tileOpacity = 1;
+        y.renderState.isSetView = true;
+        y.renderState.overlayEvent = new TYOverlayEvent({
+            mouseEvent: TYEnumEvent.TY_CLICK,
+            mouseFunc: setvalue
+        })
+
+        TYAreaRender(y);
+        TYSetLevel(8);
+    }
+
+    function setvalue(e) {
+        alert("点击成功，触发了回调函数")
+    }
+</script>
+</body>
+</html>
