@@ -17,11 +17,11 @@ var TYEnumMapType = {
     TY_OL_Land: 16,// OL3地形图
     TY_GD_VEC: 2,// 高德地图
     TY_GD_IMG: 3,// 高德卫星地图
-    TY_QQ_VEC: 4,//腾讯地图
-    TY_QQ_IMG: 5,//腾讯卫星地图
-    TY_QQ_Land: 6,// 腾讯地形图
-    TY_360_VEC: 7,//360地图
-    TY_360_IMG: 8,//360卫星地图
+    TY_ISHOW_VEC: 4,
+  //  TY_QQ_IMG: 5,//腾讯卫星地图
+   // TY_QQ_Land: 6,// 腾讯地形图
+    TY_360_VEC: 6,//360地图
+ //   TY_360_IMG: 8,//360卫星地图
     TY_Google_VEC: 9,//谷歌地图
     TY_Google_IMG: 10,// 谷歌卫星地图
     TY_Google_Land: 11,//谷歌地形图
@@ -115,14 +115,18 @@ var TYEnumMapUrl = {
         URL_WX: ["http://mt3.google.cn/vt/lyrs=y@142&hl=zh-CN&gl=cn&x={x}&y={y}&z={z}&s=Galil"],
         URL_DX: ["http://mt3.google.cn/vt/lyrs=p@142&hl=zh-CN&gl=cn&x={x}&y={y}&z={z}&s=Galil"]
     },//谷歌
-    TY_360: {
+    TY_ISHOW: {
         ID: 4,
         URL_SL: ["http://tile4.ishowchina.com/v3/tile/{z}/{x}/{y}.png"]
-    },//360
+    },//我秀
     TY_OL3: {
         ID: 5,
         URL_SL: ["http://c.tile.openstreetmap.org/{z}/{x}/{y}.png"],
         URL_DX: ["https://tile-a.openstreetmap.fr/{z}/{x}/{y}.png"]
+    },
+    TY_360: {
+        ID: 6,
+        URL_SL: ["https://map2.ssl.qhimg.com/sotile/ver27/2/{z}/?x={x}&y={y}"]
     }
 }
 

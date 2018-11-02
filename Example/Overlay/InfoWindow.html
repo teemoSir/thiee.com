@@ -1,5 +1,5 @@
 ﻿<!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title>弹出窗口</title>
@@ -17,9 +17,7 @@
 
 
     </style>
-    <script src="../../Scripts/MapAPI_JavaScript.min.js"></script>
-    <script src="../../Scripts/jquery-1.9.1.min.js"></script>
-    <link href="../../Content/bootstrap.min.css" rel="stylesheet" />
+    <script src="../../lib/MapAPI_JavaScript.min.js"></script>
 
 </head>
 <body style="overflow:hidden">
@@ -27,157 +25,21 @@
     <div class="alert alert-success" style="position:absolute; left:100px; top:20px; ">
         <label>提示：</label><br /> 1.点击标注的marker点查看弹出窗口
     </div>
-    <div id="codes" style=" position:absolute; bottom:0; width:100%; height:290px;display:none">
-        <table class="table table-condensed">
-            <tr><th>代码</th></tr>
-            <tr>
-                <td>
-                    <textarea class="form-control" style="width:100%;height:250px;">
-                        <!DOCTYPE html>
-                        <html xmlns="http://www.w3.org/1999/xhtml">
 
-                        <head>
-                            <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-                            <title>弹出窗口</title>
-                            <style type="text/css">
-                                html, body {
-                                    padding: 0;
-                                    margin: 0;
-                                }
-
-                                #container {
-                                    width: 100%;
-                                    height: 100%;
-                                    position: absolute;
-                                }
-                            </style>
-                            <script src="../MapAPI_JavaScript.min.js"></script>
-                        </head>
-
-                        <body>
-                            <div id="container"></div>
-                            <script type="text/javascript">
-                                var option = new TYMapOptions({
-                                    contentId: "container",//必填，地图容器
-                                    lnglat: new TYLngLat(114.50, 38.000),//可选 默认ip定位
-                                    mapLevel: 12//可选默认 12
-                                });
-                                TYInitialize(option);
-                                //------地图配置------//
-                                TYMapConfig(new TYConfigOption());
-                                var data = [];
-                                for (var i = 0; i < 20; i++) {
-                                    var p;
-                                    p = new TYMarker();
-                                  
-                                    p.pointId = "id" + i;//点id
-                                    p.lnglat = new TYLngLat(113.08 + Math.random() * 0.5, 38.30 + (0.1 * Math.random()));
-                                    if (i % 2 == 0) {
-                                        p.icon = new TYIcon({//点图标对象
-                                            url: "../../Images/logo.png",//点图标地址
-                                            size: new TYSize(31, 31)//图标可视区域
-                                        });
-                                    } else {
-                                        p.icon = new TYIcon();//点图标默认
-                                    }
-
-                                    data.push(p);
-                                }
-                                var pointobj = new TYPointOption();//绘制点方法参数实例化
-                                pointobj.pointData = data;//点的
-                                pointobj.pointState.isClearOverlay = true;//绘制前是否清除地图
-                                pointobj.pointState.isGather = false;//绘制时是否聚合
-                                pointobj.pointState.isSetView = true;//是否自适应
-                                //实例化事件参数
-                                var event = new TYOverlayEvent();//事件对象
-                                event.mouseEvent = TYEnumEvent.TY_CLICK;//触发事件的
-                                event.mouseFunc = clickMarker;//触发操作后的执行函数
-                                pointobj.pointState.overlayEvent = event;
-                                //绘制函数
-                                TYDrawPoint(pointobj);
-                                function clickMarker(e) {
-                                    var id = e.pointId.split("d")[1];
-                                    var windowo = new TYInfoWindowOptions();
-                                    //标准弹出框
-                                    if (parseInt(id) % 2 == 0) {
-                                        windowo.width = 300;//窗口宽度
-                                        windowo.height = 200;//窗口高度
-                                        windowo.offset = new TYPixel(0, -30);//窗口位置偏移
-                                        windowo.content = "<image src='../../Images/logo.png'> 天远地图欢迎您的使用！<br>";//窗口显示内容
-                                        windowo.position = new TYLngLat(e.GPSLngLat.GPSLng, e.GPSLngLat.GPSLat);//显示位置
-                                        windowo.showShadow = true;//是否显示阴影
-                                        windowo.isCustom = false;//是否自定义，如果为true那么高和宽的设置无效
-                                        windowo.enableCloseOnClick = true;//是否点击地图关闭弹出窗口
-                                        TYInfoWindow(windowo);
-                                    } else { //自定义
-                                        var htmls = "';"
-
-
-                                        htmls += "<div class=\"popover fade top in\" role=\"tooltip\" style=\"left:-150px;width:300px;display: block;\">";
-                                        htmls += "    <div class=\"arrow\"></div>";
-                                        htmls += "        <h3 class=\"popover-title\" >天远地图<span class='glyphicon glyphicon-remove pull-right' onclick='closeinfo()'></span></h3>";
-                                        htmls += "    <div class=\"popover-content\"><image src='../../Images/logo.png'> 天远地图欢迎您的使用！<br></div>";
-                                        htmls += "</div>";
-
-                                        //windowo.width = 300;
-                                        //windowo.height = 200;
-                                        windowo.offset = new TYPixel(0, -100);
-                                        windowo.content = htmls;
-                                        windowo.position = new TYLngLat(e.GPSLngLat.GPSLng, e.GPSLngLat.GPSLat);
-                                        windowo.showShadow = false;
-                                        windowo.isCustom = true;
-                                        // windowo.enableCloseOnClick = true;
-                                        TYInfoWindow(windowo);
-                                    }
-                                }
-                                function closeinfo() {
-                                    TYInfoWindowClose();
-                                }
-
-                            </script>
-                        </body>
-
-                    </html>
-                </textarea>
-
-            </td>
-        </tr>
-    </table>
-</div>
-
-
-<div id="codeshow" data="0" class="btn btn-default" style="position:absolute; right:20px; top:20px;font-family:Helvetica, 'Hiragino Sans GB', 'Microsoft Yahei', '微软雅黑', Arial;"><span class=" glyphicon glyphicon-eye-open"></span> 查看源码</div>
-
-
-<script>
-    $(document).ready(function () {
-        $("#codeshow").click(function () {
-            var he = $("#container").css("height");
-            var hei = he.split("px")[0];
-            if ($("#codeshow").attr("data") == "0") {
-                $("#container").css("height", (parseInt(hei) - 300) + "px");
-                $("#codes").css("display", "block")
-                $("#codeshow").removeClass("btn-default").addClass("btn-success");
-                $("#codeshow").attr("data", "1")
-            } else {
-                $("#container").css("height", (parseInt(hei) + 300) + "px");
-                $("#codes").css("display", "none")
-                $("#codeshow").removeClass("btn-success").addClass("btn-default");
-                $("#codeshow").attr("data", "0")
-            }
-
-        })
-    })
-</script>
 <script type="text/javascript">
-    var option = new TYMapOptions({
-        contentId: "container",//必填，地图容器
-        lnglat: new TYLngLat(114.50, 38.000),//可选 默认ip定位
-        mapLevel: 12//可选默认 12
-    });
-    TYInitialize(option);
-    //------地图配置------//
-    TYMapConfig(new TYConfigOption());
+    init()
+
+    function init() {
+        // 地图初始化
+        var map = new TYMapOptions();
+        map.contentId = "container";
+        map.lnglat = new TYLngLat(100, 35);
+        map.mapLevel = 4;
+        TYInitialize(map);
+
+        // 地图配置
+        TYMapTiles( new TYTilesOptions(TYEnumMapType.TY_Google_IMG));
+    }
     var data = [];
     for (var i = 0; i < 20; i++) {
         var p;

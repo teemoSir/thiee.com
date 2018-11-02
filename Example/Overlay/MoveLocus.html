@@ -1,5 +1,5 @@
 ﻿<!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title></title>
@@ -16,92 +16,12 @@
             height: 100%;
         }
     </style>
-    <script src="../../Scripts/MapAPI_JavaScript.js"></script>
-
-    <script src="../../Scripts/jquery-1.9.1.min.js"></script>
-    <link href="../../Content/bootstrap.min.css" rel="stylesheet" />
+    <script src="../../lib/MapAPI_JavaScript.min.js"></script>
 </head>
 <body style=" overflow:hidden">
 
     <div id="container"></div>
-    <div id="codes" style=" position:absolute; bottom:0; width:100%; height:290px;display:none">
-        <table class="table table-condensed">
-            <tr class=" active"><th>代码</th></tr>
-            <tr>
-                <td>
-                    <textarea class="form-control" style=" height:250px; width:100%; border:0">
-                        <!DOCTYPE html>
-                        <html xmlns="http://www.w3.org/1999/xhtml">
-                        <head>
-                        </head>
-                        <body>
 
-                        </body>
-                        <script>
-                            //------地图初始化------//
-                            var json = new TYMapOptions();
-                            json.contentId = "container";
-                            //json.lnglat= new TYLngLat(114.09,38.30);
-                            TYInitialize(json);
-                            //------------------------------//
-
-                            //------地图配置------//
-                            TYMapConfig(new TYConfigOption());
-                            //------------------------------//
-
-                            //------轨迹回放------//
-                            var lineArr = new Array();
-                            var lngX = 116.397428, latY = 39.90923;
-                            //数组中添加坐标
-                            lineArr.push(new TYLngLat(lngX, latY));
-                            //随机生成坐标点
-                            for (var i = 1; i < 10; i++) {
-                                lngX = lngX + Math.random() * 0.1;
-                                if (i % 2) {
-                                    latY = latY + Math.random() * 0.1;
-                                } else {
-                                    latY = latY + Math.random() * 0.6;
-                                }
-                                lineArr.push(new TYLngLat(lngX, latY));
-                            }
-
-                            //创建入参方法
-                            var p = new TYLocusOption({
-                                locusData: {
-                                    locusId: 1,//路径点id
-                                    nodeIcon: "http://webapi.amap.com/theme/v1.3/markers/n/mark_b.png",//路径点图标
-                                    label: new TYLabel({//加入label对象
-                                        offset: new AMap.Pixel(30, 30),//修改label相对于maker的位置 偏移
-                                        content: "两点之间轨迹回放" //显示内容，也可以为html
-                                    }),
-                                    lnglat: lineArr//路径点数组
-                                },
-                                locusState: {
-                                    circlable: true,//是否循环播放，false只做一次
-                                    overlayEvent: new TYOverlayEvent({//添加地图事件，
-                                        mouseEvent: TYEnumEvent.TY_CLICK,//当点击marker点触发，TYEnumEvent枚举可以调用其他触发方式
-                                        mouseFunc: setvalue1//已定义的方法
-                                    })
-                                }
-                            })
-
-                            var x = TYMoveLocus(p);//执行构造函数，接收返回参数
-                            x.start();//开始动画
-                            //x.stop();//停止动画
-                            //x.pause();//暂停动画，调用x.start()方法继续
-                            function setvalue1(e) {
-                                alert("点击成功，触发了回调函数")
-                            }
-                            //------------------------------//
-                        </script>
-                    </html>
-                </textarea>
-            </td>
-        </tr>
-    </table>
-</div>
-
-<button class="btn btn-default" id="codeshow" data="0" style="position:absolute; right:20px; top:20px;"><span class=" glyphicon glyphicon-eye-open"></span> 查看源码</button>
 
 <button class="btn btn-default" style="position:absolute; right:20px; top:60px;" onclick="guijihuifangStart()">开始/继续</button>
 <button class="btn btn-default" style="position:absolute; right:20px; top:100px;" onclick="guijihuifangPause()">暂停</button>
@@ -113,35 +33,20 @@
 
 
 <script>
-    $(document).ready(function () {
-        $("#codeshow").click(function () {
-            var he = $("#container").css("height");
-            var hei = he.split("px")[0];
 
-            if ($("#codeshow").attr("data") == "0") {
-                $("#container").css("height", (parseInt(hei) - 300) + "px");
-                $("#codes").css("display", "block")
-                $("#codeshow").removeClass("btn-default").addClass("btn-success");
-                $("#codeshow").attr("data", "1")
-            } else {
-                $("#container").css("height", (parseInt(hei) + 300) + "px");
-                $("#codes").css("display", "none")
-                $("#codeshow").removeClass("btn-success").addClass("btn-default");
-                $("#codeshow").attr("data", "0")
-            }
+    init()
 
-        })
-    })
-   
-    //------地图初始化------//
-    var json = new TYMapOptions();
-    json.contentId = "container";
-    //json.lnglat= new TYLngLat(114.09,38.30);
-    TYInitialize(json);
-    //------------------------------//
+    function init() {
+        // 地图初始化
+        var map = new TYMapOptions();
+        map.contentId = "container";
+        map.lnglat = new TYLngLat(100, 35);
+        map.mapLevel = 4;
+        TYInitialize(map);
 
-    //------地图配置------//
-    TYMapConfig(new TYConfigOption());
+        // 地图配置
+        TYMapTiles( new TYTilesOptions(TYEnumMapType.TY_Google_IMG));
+    }
 
     var lineArr = new Array();
     var lngX = 116.397428, latY = 39.90923;

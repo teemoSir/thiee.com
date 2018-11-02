@@ -1,254 +1,200 @@
 ﻿<!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <title></title>
     <style>
         html, body {
             margin: 0;
             padding: 0;
+            overflow: hidden
         }
 
-        #container {
+        .container {
             position: absolute;
             width: 100%;
             height: 100%;
         }
+
+        .test {
+            position: absolute;
+            right: 1rem;
+            bottom: 3rem;;
+            font-size: 13px;
+            background-color: white;
+            border-radius: 3px;
+            border: 1px solid #ccc;
+            padding: 1rem;
+            max-height: 40%;
+            max-width: 40%;
+        }
     </style>
-    <script src="../../Scripts/MapAPI_JavaScript.min.js"></script>
-    <script src="../../Scripts/jquery-1.9.1.min.js"></script>
-    <link href="../../Content/bootstrap.min.css" rel="stylesheet" />
-    <script>
-        $(document).ready(function () {
-            $("#codeshow").click(function () {
-                var he = $("#container").css("height");
-                var hei = he.split("px")[0];
-
-                if ($("#codeshow").attr("data") == "0") {
-                    $("#container").css("height", (parseInt(hei) - 300) + "px");
-                    $("#codes").css("display", "block")
-                    $("#codeshow").removeClass("btn-default").addClass("btn-success");
-                    $("#codeshow").attr("data", "1")
-                } else {
-                    $("#container").css("height", (parseInt(hei) + 300) + "px");
-                    $("#codes").css("display", "none")
-                    $("#codeshow").removeClass("btn-success").addClass("btn-default");
-                    $("#codeshow").attr("data", "0")
-                }
-
-            })
-        })
-    </script>
+    <script src="../../lib/MapAPI_JavaScript.min.js"></script>
 </head>
-<body style=" overflow:hidden">
-
-    <div id="container"></div>
-    <div id="quanjingid" style=" position:absolute; top:70px; right:20px; height:400px; width:500px"></div>
-    <div id="codes" style=" position:absolute; bottom:0; width:100%; height:290px;display:none">
-        <table class="table table-condensed">
-            <tr class=" active"><th>代码</th></tr>
-            <tr>
-                <td>
-                    <textarea class="form-control" style=" height:250px; width:100%; border:0">
-                        <!DOCTYPE html>
-                        <html xmlns="http://www.w3.org/1999/xhtml">
-                        <head>
-                            <script src="../MapAPI_JavaScript.min.js"></script>
-                            <style>
-                                #container {
-                                    position: absolute;
-                                    width: 100%;
-                                    height: 100%;
-                                }
-                            </style>
-
-                        </head>
-                        <body>
-                            <div id="container"></div>
-                            <div id="panel" style="position:absolute; right:20px; top:60px; "></div>
-                        </body>
-                        <script>
-                            //------地图初始化------//
-                            var json = new TYMapOptions();
-                            json.contentId = "container";
-                            //json.lnglat= new TYLngLat(114.09,38.30);
-                            TYInitialize(json);
-                            //------------------------------//
-
-                            //------地图配置------//
-                            TYMapConfig(new TYConfigOption());
-                            //------------------------------//
-                            var arr = [];
-                            arr.push([113.22, 38.55]);//必须使用[113.22, 38.55]这样的数组入参，否则坐标会被二次转换
-                            arr.push([113.12, 38.66]);
-
-
-                            //var TYEnumLngLatType = {
-                            //    TY_GPS: 1,//gps地球坐标系  天地图，google地图
-                            //    TY_GCJ: 2,//gps火星坐标系，360，qq，高德
-                            //    TY_BD: 3//百度地图
-                            //}
-
-                            var ll = new TYConvertOptions();//入参
-                            ll.lnglats = arr;//需要转换的坐标数组或对象
-                            ll.oType = TYEnumLngLatType.TY_GPS;//输入的坐标类型 TYEnumLngLatType枚举查看详细
-                            ll.tType = TYEnumLngLatType.TY_GCJ;//输出的坐标类型
-
-                            var data = TYconvertFrom(ll);//执行
-                            console.log(data);//查看返回值
-                        </script>
-                    </html>
-
-                </textarea>
-            </td>
-        </tr>
-    </table>
+<body>
+<div id="container" class="container"></div>
+<div id="test" class="test">
+    <b>坐标系</b>
+    <ol>
+        <li>GCJ02:中国国家测绘局 (高德地图，谷歌中国地图，我秀地图，360地图，腾讯地图)</li>
+        <li>DB09:百度地图坐标</li>
+        <li>WGS84:World Geodetic System 1984 (天地图，MapBox)</li>
+    </ol>
+    <hr>
+    <b>输入</b> <textarea id="input" rows="3" style="width: 100%">121.560301,25.039949;121.558434,25.040435</textarea>
+    <select id="convert" class="convert">
+        <option value="">转换</option>
+        <option value="WGS84GCJ02">WGS84 → GCJ02</option>
+        <option value="GCJ02WGS84">GCJ02 → WGS84</option>
+        <option value="DB09GCJ02">DB09 → GCJ02</option>
+        <option value="GCJ02DB09">GCJ02 → DB09</option>
+        <option value="WGS84DB09">WGS84 → DB09</option>
+        <option value="BD09WGS84">BD09 → WGS84</option>
+    </select><br>
+    <b>输出</b> <textarea id="output" rows="3" style="width: 100%"></textarea>
 </div>
-<button id="codeshow" data="0" class="btn btn-default" style="position:absolute; right:20px; top:20px;"><span class=" glyphicon glyphicon-eye-open"></span> 查看源码</button>
-<div id="panel" class="alert alert-success" style="position:absolute; left:100px; top:20px; ">
-    <b>转换类型TYEnumLngLatType包含:</b><br />
-    TY_GPS:1,//gps地球坐标系  天地图，google地图<br />
-    TY_GCJ:2,//gps火星坐标系，360，qq，高德<br />
-    TY_BD:3//百度地图<br />
-</div>
-
-
 <div class=" col-lg-5  form-inline  text-right" style="position:absolute; right:20px; top:60px;">
-    <label>经度：</label><input class="form-control input-sm" id="ll1" type="text" value="114.628412 " />
-    <label>纬度：</label><input class="form-control input-sm" id="ll2" type="text" value="38.045962" />
-    <select class="form-control  input-sm" onchange="myfunction(this.value)">
-        <option value="0">--请选择--</option>
-        <option value="1">GPS转高德</option>
-        <option value="2">高德转GPS</option>
-        <option value="3">百度转高德</option>
-        <option value="4">高德转百度</option>
-        <option value="5">GPS转百度</option>
-        <option value="6">百度转GPS</option>
-    </select>
 </div>
 <script>
 
-    //------地图初始化------//
-    var json = new TYMapOptions();
-    json.contentId = "container";
-    //json.mapLevel = 16;
-    json.lnglat = new TYLngLat(114.35, 38.266);
-    TYInitialize(json);
-    //------------------------------//
+    init()
 
-    //------地图配置------//
-    TYMapConfig(new TYConfigOption());
+    var el = {
+        input: document.getElementById("input"),
+        output: document.getElementById("output"),
+        select: document.getElementById("convert")
+    }
+    var inputLable, outputLabel;
 
-    function myfunction(val) {
-        
-        //------坐标校正------//
-        var ll1 = document.getElementById("ll1").value;
-        var ll2 = document.getElementById("ll2").value;
+    el.select.addEventListener("change", function () {
+        TYClear();
 
-       // if (ll1.trim() == "114.628412 " && ll2.trim() == "38.045962") {
-            TYClear();
-       // }
+        var result = convert(el.select.value);
 
-        var arr = [];
-        arr.push([ll1, ll2]);
+        addMsg(result)
 
-        var label, label1;
+        addMakers(result)
+    })
 
-        var ll = new TYConvertOptions();
-        ll.lnglats = arr;//坐标数组或对象
-        if (val == "1") {
-            ll.oType = TYEnumLngLatType.TY_GPS;//输入GPS坐标
-            ll.tType = TYEnumLngLatType.TY_GCJ;//输出高德坐标
+    function init() {
+        // 地图初始化
+        var map = new TYMapOptions();
+        map.contentId = "container";
+        map.lnglat = new TYLngLat(100, 35);
+        map.mapLevel = 4;
+        TYInitialize(map);
 
-            label = "转换前GPS坐标"; label1 = "转换后高德坐标";
-        }
-        else if (val == "2") {
-            ll.oType = TYEnumLngLatType.TY_GCJ;//输入高德坐标
-            ll.tType = TYEnumLngLatType.TY_GPS;//输出GPS坐标
-
-            label = "转换前高德坐标"; label1 = "转换后GPS坐标";
-        }
-        else if (val == "3") {
-            ll.oType = TYEnumLngLatType.TY_BD;//输入百度坐标
-            ll.tType = TYEnumLngLatType.TY_GCJ;//输出高德坐标
-
-            label = "转换前百度坐标"; label1 = "转换后高德坐标";
-        }
-        else if (val == "4") {
-            ll.oType = TYEnumLngLatType.TY_GCJ;//输入高德坐标
-            ll.tType = TYEnumLngLatType.TY_BD;//输出百度坐标
-
-            label = "转换前高德坐标"; label1 = "转换后百度坐标";
-        }
-        else if (val == "5") {
-            ll.oType = TYEnumLngLatType.TY_GPS;//输入GPS坐标
-            ll.tType = TYEnumLngLatType.TY_BD;//输出百度坐标
-
-            label = "转换前GPS坐标"; label1 = "转换后百度坐标";
-        }
-        else if (val == "6") {
-            ll.oType = TYEnumLngLatType.TY_BD;//输入百度坐标
-            ll.tType = TYEnumLngLatType.TY_GPS;//输出GPS
-
-            label = "转换前百度坐标"; label1 = "转换后GPS坐标";
-        } else {
-            document.getElementById("panel").innerHTML = "请选择转换方式";
-            return;
-        }
-        var data = TYconvertFrom(ll);
-
-        console.log(data);
-        console.log(data[0]);
-        var ht = "";
-        //if (data.status == true) {
-        ht += "转换成功<br>";
-        ht += "经纬度:" + data[0][0] + "," + data[0][1] + "<br>";
-
-        // if (ll1.trim() == "114.628412" && ll2.trim() == "38.045962")
-        //{
-        //绘制点
-        var point = new TYMarker();
-        point.icon = new TYIcon();
-
-        var s = new TYLabel();
-        s.content = label;
-        s.offset = new TYPixel(25, 5);
-        point.label = s;
-        
-        point.lnglat = new TYLngLat_Normal(ll1, ll2);
-        point.pointId = "label1"
-        var po = new TYPointOption();
-        po.pointData = point;
-        po.pointState.isClearOverlay = false;
-        po.pointState.isGather = false;
-
-        TYDrawPoint(po);
-        //}
-
-        var   point2 = new TYMarker();
-        point2.label = label1;
-        point2.icon = new TYIcon();
-
-        var s = new TYLabel();
-        s.content = label1;
-        s.offset = new TYPixel(25, 5);
-        point2.label = s;
-
-        point2.lnglat = new TYLngLat_Normal(data[0][0], data[0][1]);
-        point2.pointId = "label2"
-        var po2 = new TYPointOption();
-        po2.pointData = point2;
-        po2.pointState.isClearOverlay = false;
-        po2.pointState.isGather = false;
-        TYDrawPoint(po2);
-
-        // } else {
-        // ht = "转换失败";
-        // }
-
-        document.getElementById("panel").innerHTML = ht;
+        // 地图配置
+        TYMapTiles( new TYTilesOptions(TYEnumMapType.TY_Google_IMG));
     }
 
+    function toCoord(coord) {
+        return coord.map(function (item) {
+            return [parseFloat(item.split(",")[0]), parseFloat(item.split(",")[1])]
+        })
+    }
+
+    function convert(value) {
+        var ll = new TYConvertOptions();
+        ll.lnglats = toCoord(el.input.value.toString().split(";"));//坐标数组或对象
+        switch (value) {
+            case "WGS84GCJ02":
+                ll.oType = TYEnumLngLatType.TY_GPS;//输入GPS坐标
+                ll.tType = TYEnumLngLatType.TY_GCJ;//输出高德坐标
+                inputLable = "(WGS84)";
+                outputLabel = "(GCJ02)";
+                break;
+            case "GCJ02WGS84":
+                ll.oType = TYEnumLngLatType.TY_GCJ;//输入高德坐标
+                ll.tType = TYEnumLngLatType.TY_GPS;//输出GPS坐标
+                inputLable = "(GCJ02)";
+                outputLabel = "(WGS84)";
+                break;
+            case "DB09GCJ02":
+                ll.oType = TYEnumLngLatType.TY_BD;//输入百度坐标
+                ll.tType = TYEnumLngLatType.TY_GCJ;//输出高德坐标
+                inputLable = "(DB09)";
+                outputLabel = "(GCJ02)";
+                break;
+            case "GCJ02DB09":
+                ll.oType = TYEnumLngLatType.TY_GCJ;//输入高德坐标
+                ll.tType = TYEnumLngLatType.TY_BD;//输出百度坐标
+                inputLable = "(GCJ02)";
+                outputLabel = "(DB09)";
+                break;
+            case "WGS84DB09":
+                ll.oType = TYEnumLngLatType.TY_GPS;//输入GPS坐标
+                ll.tType = TYEnumLngLatType.TY_BD;//输出百度坐标
+                inputLable = "(WGS84)";
+                outputLabel = "(DB09)";
+                break;
+            case "DB09GCJ02":
+                ll.oType = TYEnumLngLatType.TY_BD;//输入百度坐标
+                ll.tType = TYEnumLngLatType.TY_GPS;//输出GPS
+                inputLable = "(DB09)";
+                outputLabel = "(GCJ02)";
+                break;
+        }
+
+        return TYconvertFrom(ll);
+
+    }
+
+    function addMakers(coord) {
+
+        for (var i in coord) {
+            if (!coord[i][0] || !coord[i][1] || isNaN(coord[i][0]) || isNaN(coord[i][1])) {
+                break
+            }
+            var oldCoord = [
+                parseFloat(el.input.value.split(';')[i].split(',')[0]),
+                parseFloat(el.input.value.split(';')[i].split(',')[1])
+            ]
+
+            //绘制点
+            var point = new TYMarker();
+            point.icon = new TYIcon();
+
+            var label = new TYLabel();
+            label.content = "<div style='background-color: red;padding: 3px;color: white;font-size: 12px'>输入坐标" + inputLable + "：" + coord[i].join(",") + "</div>";
+            label.offset = new TYPixel(19, 5);
+
+            point.label = label;
+            point.lnglat = new TYLngLat_Normal(oldCoord[0], oldCoord[1]);
+            point.pointId = "inputPoint" + i
+
+            var inOption = new TYPointOption();
+            inOption.pointData = point;
+            inOption.pointState.isClearOverlay = false;
+            inOption.pointState.isGather = false;
+            inOption.pointState.isSetView = false
+
+            // 转换后结果
+            var outPoint = new TYMarker();
+            outPoint.icon = new TYIcon();
+
+            var label = new TYLabel();
+            label.content = "<div style='background-color: red;padding: 3px;color: white;font-size: 12px'>转换结果" + outputLabel + "：" + coord[i].join(",") + "</div>";
+            label.offset = new TYPixel(19, 5);
+
+            outPoint.label = label;
+            outPoint.lnglat = new TYLngLat_Normal(coord[i][0], coord[i][1]);
+            outPoint.pointId = "outPoint" + i
+
+            var outOption = new TYPointOption();
+            outOption.pointData = outPoint;
+            outOption.pointState.isClearOverlay = false;
+            outOption.pointState.isGather = false;
+            outOption.pointState.isSetView = false
+
+            TYDrawPoint(inOption);
+            TYDrawPoint(outOption);
+        }
+    }
+
+    function addMsg(data) {
+        el.output.innerHTML = data.join();
+    }
 
 
 </script>

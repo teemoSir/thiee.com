@@ -297,8 +297,8 @@
             url: location.toString() + ".html",
             dataType: "text",
             success: function (r) {
-                r = r.replace("../../Scripts/MapAPI_JavaScript.min.js", "http://thiee.com/lib/MapAPI_JavaScript.min.js")
-                r = r.replace("../../Scripts/area.js", "http://thiee.com/Scripts/area.js")
+                r = r.replace("../../lib/MapAPI_JavaScript.min.js", "http://thiee.com/lib/MapAPI_JavaScript.min.js")
+                r = r.replace("../../data/area.js", "http://thiee.com/data/area.js")
                 editor.setValue(r);
             }, error: function (e) {
                 throw e
@@ -321,7 +321,7 @@
         }
 
         function iframeLoadData() {
-            var location = (window.location.hash.indexOf("#") > -1) ? window.location.hash : "Example/Map/Initialize";
+            var location = (window.location.hash.indexOf("#") > -1) ? window.location.hash : "#Example/Map/Initialize";
             $(iframe).attr("src", location.toString().substring(1) + ".html");
         }
     }

@@ -1,5 +1,5 @@
 ﻿<!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title>手绘点线面</title>
@@ -17,10 +17,8 @@
 
 
     </style>
-   
-    <script src="../../Scripts/MapAPI_JavaScript.min.js"></script>
-    <script src="../../Scripts/jquery-1.9.1.min.js"></script>
-    <link href="../../Content/bootstrap.min.css" rel="stylesheet" />
+
+    <script src="../../lib/MapAPI_JavaScript.min.js"></script>
 </head>
 <body style="overflow:hidden">
     <div id="container"></div>
@@ -40,130 +38,23 @@
         <input type="button" class="btn btn-default" onclick="setType(5)" value="圆形" />
         <input type="button" class="btn btn-default" onclick="TYDrawStop(true)" value="关闭工具" />
     </div>
-    <div id="codes" style=" position:absolute; bottom:0; width:100%; height:290px;display:none">
-        <table class="table table-condensed">
-            <tr><th>代码</th></tr>
-            <tr>
-                <td>
-                    <textarea class="form-control" style="width:100%;height:250px;">
-                        <!DOCTYPE html>
-                        <html xmlns="http://www.w3.org/1999/xhtml">
 
-                        <head>
-                            <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-                            <title>手绘点线面</title>
-                            <style type="text/css">
-                                html, body {
-                                    padding: 0;
-                                    margin: 0;
-                                }
-
-                                #container {
-                                    width: 100%;
-                                    height: 100%;
-                                    position: absolute;
-                                }
-                            </style>
-                            <script src="../MapAPI_JavaScript.min.js"></script>
-                        </head>
-
-                        <body>
-                            <div id="container"></div>
-                             <div style="position:absolute;right:20px;top:60px;">
-        <input type="button" class="btn btn-default" onclick="setType(1)" value="点" />
-        <input type="button" class="btn btn-default" onclick="setType(2)" value="线段" />
-        <input type="button" class="btn btn-default" onclick="setType(3)" value="矩形" />
-        <input type="button" class="btn btn-default" onclick="setType(4)" value="多边形" />
-        <input type="button" class="btn btn-default" onclick="setType(5)" value="圆形" />
-        <input type="button" class="btn btn-default" onclick="TYDrawStop(true)" value="关闭工具" />
-    </div>
-                            <script type="text/javascript">
-                                var option = new TYMapOptions({
-                                    contentId: "container",//必填，地图容器
-                                    lnglat: new TYLngLat(114.50, 38.000),//可选 默认ip定位
-                                    mapLevel: 12//可选默认 12
-                                });
-                                TYInitialize(option);
-                                //------地图配置------//
-                                TYMapConfig(new TYConfigOption());
-                                var draw = new TYOverlayOption();//手绘方法的实例化
-
-                                draw.isClearOverlay = true;//绘制时是否清除地图
-                                draw.isShowMath = true;//是否展示绘制完的测量数据，包括面积和距离 单位分别为平方米和米
-                                draw.callfunc = drawPLR;//绘制完成后的回调函数
-
-                                function drawPLR(e) {
-                                    alert("触发了回调函数，f12查看返回数据");
-
-                                    console.log(e)
-                                }
-                                function setType(type) {
-
-                                    switch (type) {
-                                        case 1:
-                                            draw.overlayType = TYEnumOverLay.TY_POINT;//点
-                                            break;
-                                        case 2:
-                                            draw.overlayType = TYEnumOverLay.TY_POLYLINE;//折线
-                                            break;
-                                        case 3:
-                                            draw.overlayType = TYEnumOverLay.TY_RECTRANGLE;//矩形
-                                            break;
-                                        case 4:
-                                            draw.overlayType = TYEnumOverLay.TY_POLYGON;//多边形
-                                            break;
-                                        case 5:
-                                            draw.overlayType = TYEnumOverLay.TY_CIRCLE;//圆形
-                                            break;
-                                    }
-                                    TYDrawOverlay(draw);
-                                }
-                            </script>
-                        </body>
-
-                    </html>
-                </textarea>
-
-            </td>
-        </tr>
-    </table>
-</div>
-
-<div></div>
-<div id="codeshow" data="0" class="btn btn-default" style="position:absolute; right:20px; top:20px;font-family:Helvetica, 'Hiragino Sans GB', 'Microsoft Yahei', '微软雅黑', Arial;"><span class=" glyphicon glyphicon-eye-open"></span> 查看源码</div>
-
-
-<script>
-    $(document).ready(function () {
-        $("#codeshow").click(function () {
-            var he = $("#container").css("height");
-            var hei = he.split("px")[0];
-            if ($("#codeshow").attr("data") == "0") {
-                $("#container").css("height", (parseInt(hei) - 300) + "px");
-                $("#codes").css("display", "block")
-                $("#codeshow").removeClass("btn-default").addClass("btn-success");
-                $("#codeshow").attr("data", "1")
-            } else {
-                $("#container").css("height", (parseInt(hei) + 300) + "px");
-                $("#codes").css("display", "none")
-                $("#codeshow").removeClass("btn-success").addClass("btn-default");
-                $("#codeshow").attr("data", "0")
-            }
-
-        })
-    })
-</script>
 <script type="text/javascript">
-    var option = new TYMapOptions({
-        contentId: "container",//必填，地图容器
-        lnglat: new TYLngLat(114.50, 38.000),//可选 默认ip定位
-        mapLevel: 12//可选默认 12
-    });
-    TYInitialize(option);
+    init()
+
+    function init() {
+        // 地图初始化
+        var map = new TYMapOptions();
+        map.contentId = "container";
+        map.lnglat = new TYLngLat(100, 35);
+        map.mapLevel = 4;
+        TYInitialize(map);
+
+        // 地图配置
+        TYMapTiles( new TYTilesOptions(TYEnumMapType.TY_Google_IMG));
+    }
 
     var draw = new TYOverlayOption();
-    //------地图配置------//
-    TYMapConfig(new TYConfigOption());
     draw.isClearOverlay = true;
     draw.isShowMath = true;
     draw.callfunc = drawPLR;
