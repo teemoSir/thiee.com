@@ -166,6 +166,7 @@
                                 <a href="javascript:" name="href" data="Example/Overlay/Rectangle">矩形</a>
                                 <a href="javascript:" name="href" data="Example/Overlay/Polygon">多边形</a>
                                 <a href="javascript:" name="href" data="Example/Overlay/Circle">圆形</a>
+                                <a href="javascript:" name="href" data="Example/Overlay/MassPoint">海量点</a>
                                 <a href="javascript:" name="href" data="Example/Overlay/Remove">绘制清空</a>
                             </ol>
                             <a><b>组件</b></a>
@@ -178,7 +179,7 @@
                             <a><b>图层</b></a>
                             <ol style="list-style-type: circle">
                                 <a href="javascript:" name="href" data="Example/Controls/MapTraffic">拥堵图层</a>
-                                <a href="javascript:" name="href" data="Example/Controls/MassPoint">海量点</a>
+
                                 <a href="javascript:" name="href" data="Example/Controls/MapTiles">图层切换</a>
                                 <a href="javascript:" name="href" data="Example/Controls/Panorama">全景地图</a>
                                 <a href="javascript:" name="href" data="Example/Controls/HeatMap">热力图层</a>
@@ -299,6 +300,7 @@
             success: function (r) {
                 r = r.replace("../../lib/MapAPI_JavaScript.min.js", "http://thiee.com/lib/MapAPI_JavaScript.min.js")
                 r = r.replace("../../data/area.js", "http://thiee.com/data/area.js")
+                r = r.replace("../../data/heatmapData.js", "http://thiee.com/data/heatmapData.js")
                 editor.setValue(r);
             }, error: function (e) {
                 throw e

@@ -1,12 +1,13 @@
 ﻿<!DOCTYPE html>
 <html>
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="UTF-8"/>
     <title></title>
     <style>
         html, body {
             margin: 0;
             padding: 0;
+            overflow: hidden
         }
 
         .container {
@@ -15,19 +16,33 @@
             height: 100%;
         }
 
+        .test {
+            position: absolute;
+            right: 1rem;
+            bottom: 3rem;;
+            font-size: 13px;
+            background-color: white;
+            border-radius: 3px;
+            border: 1px solid #ccc;
+            padding: 1rem;
+            max-height: 40%;
+            max-width: 40%;
+        }
     </style>
     <script src="../../lib/MapAPI_JavaScript.min.js"></script>
 
 </head>
-<body style=" overflow:hidden">
+<body>
 
-    <div id="container"></div>
-    <div id="quanjingid" style=" position:absolute; top:70px; right:20px; height:400px; width:500px"></div>
+<div id="container" class="container"></div>
+<div id="panoid" style=" position:absolute; top:70px; right:20px; height:400px; width:500px"></div>
 
-<div class="alert alert-success" style="position:absolute; left:100px; top:20px; ">请点击需要显示全景的区域</div>
+<div class="test">请点击需要显示全景的区域</div>
 <script>
 
     init()
+
+    initPano()
 
     function init() {
         // 地图初始化
@@ -38,30 +53,32 @@
         TYInitialize(map);
 
         // 地图配置
-        TYMapTiles( new TYTilesOptions(TYEnumMapType.TY_Google_IMG));
+        TYMapTiles(new TYTilesOptions(TYEnumMapType.TY_Google_IMG));
     }
 
-    var event = new TYEventOptions();
-    event.event = TYEnumEvent.TY_CLICK;
-    event.callback = setvalue;
-    TYAddMapEvent(event);
-    //第一次加载
-    var first = true;
-    if (first) {
-        first = false;
-        var pos = new TYLngLat(114.497552, 38.105608);
-        var qj = new TYPanoramaOption();
-        qj.containerId = "quanjingid";
-        qj.position = pos;
-        TYPanorama(qj);
+    function initPano() {
+        var event = new TYEventOptions();
+        event.event = TYEnumEvent.TY_CLICK;
+        event.callback = function (e) {
+            setValue(e.location.GPSLng, e.location.GPSLat)
+        }
+        TYAddMapEvent(event);
+
+        //第一次加载
+        var first = true;
+        if (first) {
+            first = false;
+            setValue(114.497552, 38.105608)
+        }
     }
+
     //获取点击坐标
-    function setvalue(e) {
+    function setValue(e) {
         var pos = new TYLngLat(e.location.GPSLng, e.location.GPSLat);
         var qj = new TYPanoramaOption();
-        qj.containerId = "quanjingid";
-        qj.position = pos;
-        TYPanorama(qj);
+        pano.containerId = "panoid";
+        pano.position = pos;
+        TYPanorama(pano);
     }
 </script>
 </body>

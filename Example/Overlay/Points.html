@@ -1,29 +1,45 @@
 ﻿<!DOCTYPE html>
 <html>
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="UTF-8 "/>
     <title>批量点绘制</title>
     <style type="text/css">
         html, body {
             padding: 0;
             margin: 0;
+            overflow: hidden;
         }
 
-        #container {
+        .container {
             width: 100%;
             height: 100%;
             position: absolute;
         }
+
+        .test {
+            position: absolute;
+            right: 1rem;
+            bottom: 3rem;;
+            font-size: 13px;
+            background-color: white;
+            border-radius: 3px;
+            border: 1px solid #ccc;
+            padding: 1rem;
+            max-height: 40%;
+            max-width: 40%;
+        }
     </style>
     <script src="../../lib/MapAPI_JavaScript.min.js"></script>
 </head>
-<body style="overflow:hidden">
-    <div id="container"></div>
-    <div class="alert alert-success" style="position:absolute;left:100px;top:20px;">
-        <label>提示：</label><br />
-        1.点击聚合点图标可以展开所有聚合的点。<br>
-        2.点击非聚合点图标可以触发marker点的回调函数。<br>
-    </div>
+<body>
+<div id="container" class="container"></div>
+<div class="test">
+    <b>提示：</b><br/>
+    <ol>
+        <li>点击聚合展开聚合点。</li>
+        <li>点击非聚合点触发回调。</li>
+    </ol>
+</div>
 
 <script type="text/javascript">
     init()
@@ -37,60 +53,46 @@
         TYInitialize(map);
 
         // 地图配置
-        TYMapTiles( new TYTilesOptions(TYEnumMapType.TY_Google_IMG));
+        TYMapTiles(new TYTilesOptions(TYEnumMapType.TY_Google_IMG));
+
+        addPoints(true);
     }
-    function addpoints(a) {
-        var data = [];
+
+    function addPoints(a) {
+        var points = [];
         for (var i = 0; i < 50; i++) {
-            var p = new TYMarker({
-                pointId: "divid" + i,
+            var point = new TYMarker({
+                pointId: "point_" + i,
                 label: new TYLabel({
-                    content: "<span style='color:red;border:1px solid red;background-color:blue;'>自定义的marker标签</span>",
+                    content: "<p style='color:white;background-color:#F6646F;font-size: 0.8rem'>My Marker</p>",
                     offset: new TYPixel(25, 15)
                 }),
                 lnglat: new TYLngLat(114.08 + Math.random() * 0.5, 38.30 + (0.1 * Math.random())),
                 icon: new TYIcon()
             });
-            data.push(p);
+            points.push(point);
         }
-        var pointobj = new TYPointOption();
-        pointobj.pointData =  data;
-        pointobj.pointState.isClearOverlay = true;
-        pointobj.pointState.isGather = a;
-        pointobj.pointState.isSetView = true;
+
         //实例化事件参数
         var event = new TYOverlayEvent();
         event.mouseEvent = TYEnumEvent.TY_CLICK;
-        event.mouseFunc = clickMarker;
-        pointobj.pointState.overlayEvent = event;
-        //绘制函数
-        TYDrawPoint(pointobj);
-    }
-    // addpoints();
-    addpoints(false);
-    $(document).ready(function () {
-        $("#cb").change(function () {
-            if (this.checked) {
-                addpoints(true);
-                TYSetLevel(10);
-            }
-            else
-                addpoints(false);
-        });
-    })
+        event.mouseFunc = callback;
 
-    function clickMarker(e) {
+        var option = new TYPointOption();
+        option.pointData = points;
+        option.pointState.isClearOverlay = true;
+        option.pointState.isGather = a;
+        option.pointState.isSetView = true;
+        option.pointState.overlayEvent = event;
+        //绘制函数
+        TYDrawPoint(option);
+    }
+
+
+    function callback(e) {
         alert("触发了回调函数");
         console.log(e)
     }
-
-    function add() {
-        var tile = new TYTilesOptions(TYEnumMapType.TY_TDT_VEC);//图层入参
-        TYMapTiles(tile);
-    }
-    _map.on("rightclick", function () {
-        add()
-    })
 </script>
 </body>
 </html>

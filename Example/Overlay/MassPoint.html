@@ -1,70 +1,89 @@
 ﻿<!DOCTYPE html>
 <html>
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="UTF-8"/>
     <title></title>
     <style>
         html, body {
             margin: 0;
             padding: 0;
+            overflow: hidden
         }
 
-        #container {
+        .container {
             position: absolute;
             width: 100%;
             height: 100%;
-        }   .amap-scale-middle {
-            height: 4px;
         }
 
+        .test {
+            position: absolute;
+            right: 1rem;
+            bottom: 3rem;;
+            font-size: 13px;
+            background-color: white;
+            border-radius: 3px;
+            border: 1px solid #ccc;
+            padding: 1rem;
+            max-height: 40%;
+            max-width: 40%;
+        }
     </style>
 
     <script src="../../lib/MapAPI_JavaScript.min.js"></script>
-    <script src="../../Scripts/massdata.js"></script>
+    <script src="../../data/massdata.js"></script>
 
 </head>
-<body style=" overflow:hidden">
+<body>
+<div id="container" class="container"></div>
 
-    <div id="container"></div>
 
-<button class="btn btn-default" style="position:absolute; right:20px; top:60px;" onclick="toggleAdd(true)">加载海量点</button>
-<div class="alert alert-success" style="position:absolute; left:100px; top:20px; ">
-    <label>提示：</label><br />
-    1.点击海量点图标触发回调
+<div class="test">
+    <p>
+        <b>数量</b>
+        <select id="countNumber" onchange="addPoint()">
+            <option value="1000">1000标记</option>
+            <option value="5000">5000标记</option>
+            <option value="10000">10000标记</option>
+        </select>
+    </p>
+    <p>
+        <b>图形</b>
+        <select id="style" onchange="addPoint()">
+            <option value="TYEnumMassShape.TY_MASS_STAR">五角星</option>
+            <option value="TYEnumMassShape.TY_MASS_CIRCLE">圆</option>
+            <option value="TYEnumMassShape.TY_MASS_RECT">矩形</option>
+            <option value="TYEnumMassShape.TY_MASS_BULLE">水滴</option>
+            <option value="TYEnumMassShape.TY_MASS_CUSTOM">网络图片</option>
+        </select>
+    </p>
+    <p>
+        <b>颜色</b>
+        <select id="color" onchange="addPoint()">
+            <option value="#F54312" selected="">橘色</option>
+            <option value="#0000ff">蓝色</option>
+            <option value="#00ff00">绿色</option>
+        </select>
+    </p>
+    <p>
+        <b>大小</b>
+        <select id="size" onchange="addPoint()">
+            <option value="TYEnumMassSize.TY_MASS_SMALL">小</option>
+            <option value="TYEnumMassSize.TY_MASS_MIDDLE">中</option>
+            <option value="TYEnumMassSize.TY_MASS_BIG">大</option>
+            <option value="TYEnumMassSize.TY_MASS_SUPERBIG">超大</option>
+        </select>
+    </p>
+    <p>
+        <b>透明度(0-1)</b>
+        <input type="range" max="10" min="1" value="7" id="alpha" onchange="addPoint()">
+    </p>
+
+    <button onclick="TYClear()">删除海量点</button>
 </div>
-<div id="pannel" class="text-right" style="right:20px; top:100px;position:absolute;">
-    <select id="countNum" class=" form-control " onchange="toggleAdd()">
-        <option value="1">5千点</option>
-        <option value="2">1万点</option>
 
-    </select>
-    <select id="style" class="form-control" onchange="toggleSetSelect()" style="margin-top:5px">
-        <option value="TYEnumMassShape.TY_MASS_STAR">五角星</option>
-        <option value="TYEnumMassShape.TY_MASS_CIRCLE">圆点</option>
-        <option value="TYEnumMassShape.TY_MASS_RECT">正方形</option>
-        <option value="TYEnumMassShape.TY_MASS_BULLE">气泡</option>
-        <option value="TYEnumMassShape.TY_MASS_CUSTOM">自定义图片</option>
-    </select>
-    <select id="color" class="form-control" onchange="toggleAdd()" style="margin-top:5px">
-        <option value="#F54312" selected="">橘色</option>
-        <option value="#0000ff">蓝色</option>
-        <option value="#00ff00">绿色</option>
-    </select>
-
-    <select id="size" class="form-control" onchange="toggleAdd()" style="margin-top:5px">
-        <option value="TYEnumMassSize.TY_MASS_SMALL">小</option>
-        <option value="TYEnumMassSize.TY_MASS_MIDDLE">中</option>
-        <option value="TYEnumMassSize.TY_MASS_BIG">大</option>
-        <option value="TYEnumMassSize.TY_MASS_SUPERBIG">超大</option>
-    </select>
-    <select id="alpha" class="form-control" onchange="toggleAdd()" style="margin-top:5px">
-        <option value="1">不透明</option>
-        <option value="0.5">半透明</option>
-        <option value="0.1">几乎透明</option>
-    </select>
-    <input type="button" class="btn btn-default" value="删除海量点" onclick="TYMassClear()" style="margin-top:5px">
-</div>
 <script>
+
 
     init()
 
@@ -77,76 +96,81 @@
         TYInitialize(map);
 
         // 地图配置
-        TYMapTiles( new TYTilesOptions(TYEnumMapType.TY_Google_IMG));
+        TYMapTiles(new TYTilesOptions(TYEnumMapType.TY_Google_IMG));
+
+        addPoint();
     }
 
-    function toggleSetSelect() {
-        var style = eval(document.getElementById("style").value);
-
-        if (style == 1) {
-            color.disabled  = "true";
-            color.style.backgroundColor  = "#797777";
-        } else {
-            color.disabled  = null;
-            color.style.backgroundColor  = "#ffffff";
+    function addPoint() {
+        var el = {
+            count: document.getElementById("countNumber").value,//获取加载数量
+            style: document.getElementById("style").value,//获取海量点类型
+            size: document.getElementById("size").value,//获取海量点大小
+            alpha: document.getElementById("alpha").value//获取海量点整体透明度
         }
-        toggleAdd();
-    }
-    function toggleAdd(a) {
 
-    var b=false;
-        if(a)b=true;
-        var count = $("#countNum").val();//获取加载数量
-        var color = document.getElementById("color").value;//获取设定颜色值
-        var style = eval(document.getElementById("style").value);//获取海量点类型
-        var size = eval(document.getElementById("size").value);//获取海量点大小
-        var alpha = Number(document.getElementById("alpha").value);//获取海量点整体透明度
+        setElement(el.alpha)
 
-        var datas = [];  // 添加海量点数据
-
-
-        for (var i = 0; i < count; i++) {
-            for (var j = 0; j < data.data.length; j++) {
-                var md = new MassPoint({
-                    id:"id"+ (i+1) * (j+1),
-                    lng: data.data[j][0] + Math.random() * 0.01,
-                    lat: data.data[j][1] + Math.random() * 0.01,
-                    color: color,//点颜色 只支持16进制 例如#00ff00
-                    type: style,//点样式  枚举
-                    size: size,//点尺寸  枚举
-                    opacity: alpha// 透明度 0-1
-                });
-                if (style == "TYEnumMassShape.TY_MASS_CUSTOM") {
-                    md.url = "http://webapi.amap.com/theme/v1.3/markers/n/mark_b.png";
-                }
-                datas.push(md);
+        var massPoint = [];  // 添加海量点数据
+        for (var i = 0; i < Number(el.count); i++) {
+            var point = new MassPoint({
+                id: "ID_" + (i + 1),
+                lat: getRandomNum(-80, 80),
+                lng: getRandomNum(-180, 180),
+                color: el.color,//点颜色 只支持16进制 例如#00ff00
+                type: eval(el.style),//点样式  枚举
+                size: eval(el.size),//点尺寸  枚举
+                opacity: Number(el.alpha / 10)// 透明度 0-1
+            });
+            if (el.style == "TYEnumMassShape.TY_MASS_CUSTOM") {
+                point.url = "http://webapi.amap.com/theme/v1.3/markers/n/mark_b.png";
             }
+            massPoint.push(point);
         }
         var option = new TYMassPointOption({
-            massPointDatas: datas,
+            massPointDatas: massPoint,
             massPointState: {
                 isClearOverlay: true,
-                isSetView:b,
+                isSetView: false,
                 overlayEvent: new TYOverlayEvent({
                     mouseEvent: TYEnumEvent.TY_CLICK,
-                    mouseFunc: setvalue
+                    mouseFunc: callback
                 })
             }
         })
-        m = TYMassPoint(option);
+        TYMassPoint(option);
     }
 
-    function setvalue(e) {
-        var windowo = new TYInfoWindowOptions();
-        windowo.width = 300;
-        windowo.height = 200;
+    function callback(e) {
+        var popupText = []
+        popupText.push("<div style='font-size: 12px;color: #999'>");
+        popupText.push("坐标：" + e.GPSlng + " / " + e.GPSlat);
+        popupText.push("ID：" + e.id);
+        popupText.push("颜色：" + e.color);
+        popupText.push("形状：" + e.type);
+        popupText.push("尺寸：" + e.size);
+        popupText.push("透明度：" + e.opacity);
+        popupText.push("</div>");
 
-        windowo.content = "<div style='width:200px;height:200px;'>经纬度：" + e.GPSlng.toFixed(6) + ',' + e.GPSlat.toFixed(6) + ',<br/>ID:' + e.id + ',<br/>颜色：' + e.color + ',<br/>形状：' + e.type + ',<br/>尺寸：' + e.size + ',<br/>透明度：' + e.opacity + "</div>";
+        var windowo = new TYInfoWindowOptions();
+        windowo.width = 100;
+        windowo.height = 150;
+        windowo.content = popupText.join("<br/>")
         windowo.position = new TYLngLat(e.GPSlng, e.GPSlat);
         windowo.showShadow = true;
         windowo.isCustom = false;
         windowo.enableCloseOnClick = true;
         TYInfoWindow(windowo);
+    }
+
+    function setElement(option) {
+        document.getElementById("alpha").value = option //获取海量点整体透明度
+    }
+
+    function getRandomNum(Min, Max) {
+        var Range = Max - Min;
+        var Rand = Math.random();
+        return (Min + Math.round(Rand * Range));
     }
 </script>
 </body>

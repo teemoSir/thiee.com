@@ -1,25 +1,47 @@
 ﻿<!DOCTYPE html>
 <html>
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="UTF-8"/>
     <title>绘制多边形</title>
     <style type="text/css">
         html, body {
             padding: 0;
             margin: 0;
+            overflow: hidden
         }
 
-        #container {
+        .container {
             width: 100%;
             height: 100%;
             position: absolute;
         }
-       </style>
+
+        .test {
+            position: absolute;
+            right: 1rem;
+            bottom: 3rem;;
+            font-size: 13px;
+            background-color: white;
+            border-radius: 3px;
+            border: 1px solid #ccc;
+            padding: 1rem;
+            max-height: 40%;
+            max-width: 40%;
+        }
+    </style>
     <script src="../../lib/MapAPI_JavaScript.min.js"></script>
 
 </head>
-<body style="overflow:hidden">
-    <div id="container"></div>
+<body>
+<div id="container" class="container"></div>
+<div class="test" >
+    <b>操作</b>
+    <ol>
+        <li>单击图形可编辑图形</li>
+        <li>双击图形触发回调</li>
+    </ol>
+</div>
+
 <script type="text/javascript">
     init()
 
@@ -32,24 +54,26 @@
         TYInitialize(map);
 
         // 地图配置
-        TYMapTiles( new TYTilesOptions(TYEnumMapType.TY_Google_IMG));
+        TYMapTiles(new TYTilesOptions(TYEnumMapType.TY_Google_IMG));
+
+        addpolygon();
     }
 
-    addpolygon();
+
     function addpolygon() {
         var lnglatArr = [];
-        lnglatArr.push(new TYLngLat(113, 38));
-        lnglatArr.push(new TYLngLat(114, 39));
-        lnglatArr.push(new TYLngLat(99, 40));
-        lnglatArr.push(new TYLngLat(95, 41));
+        lnglatArr.push(new TYLngLat(115, 38));
+        lnglatArr.push(new TYLngLat(113, 39));
+        lnglatArr.push(new TYLngLat(99, 45));
+        lnglatArr.push(new TYLngLat(95, 40));
 
         var lnglatArr2 = [];
-        lnglatArr2.push(new TYLngLat(103, 40));
-        lnglatArr2.push(new TYLngLat(96, 41));
-        lnglatArr2.push(new TYLngLat(102, 42));
-        lnglatArr2.push(new TYLngLat(94, 43));
+        lnglatArr2.push(new TYLngLat(95, 38));
+        lnglatArr2.push(new TYLngLat(85, 39));
+        lnglatArr2.push(new TYLngLat(86, 45));
+        lnglatArr2.push(new TYLngLat(91, 40));
 
-        var arr = [];
+        var polygons = [];
         for (var i = 0; i < 2; i++) {
             var data = new TYPolygon();
             data.fillColor = "red";
@@ -61,12 +85,12 @@
             data.lineWidth = 4;
             if (i == 0) data.lnglat = lnglatArr;
             if (i == 1) data.lnglat = lnglatArr2;
-            data.polygonId = "poly";
-            arr.push(data);
+            data.polygonId = "poly_" + i;
+            polygons.push(data);
         }
 
         var polygon = new TYPolygonOption();
-        polygon.polygonData = arr;
+        polygon.polygonData = polygons;
         polygon.polygonState.isClearOverlay = true;
         polygon.polygonState.isSetView = true;
         //实例化事件参数
@@ -78,11 +102,6 @@
         TYDrawPolygon(polygon);
 
     }
-
-    TYAddMapEvent(new TYEventOptions({
-        event: TYEnumEvent.TY_RIGHTCLICK,
-        callback: addpolygon
-    }))
 
     function clickPolygon(e) {
         alert("双击多边形出发了回调函数");

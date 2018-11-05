@@ -1,28 +1,46 @@
 ﻿<!DOCTYPE html>
 <html>
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="UTF-8"/>
     <title>绘制线</title>
     <style type="text/css">
         html, body {
             padding: 0;
             margin: 0;
+            overflow: hidden;
         }
 
-        #container {
+        .container {
             width: 100%;
             height: 100%;
             position: absolute;
         }
+
+        .test {
+            position: absolute;
+            right: 1rem;
+            bottom: 3rem;;
+            font-size: 13px;
+            background-color: white;
+            border-radius: 3px;
+            border: 1px solid #ccc;
+            padding: 1rem;
+            max-height: 40%;
+            max-width: 40%;
+        }
     </style>
     <script src="../../lib/MapAPI_JavaScript.min.js"></script>
 </head>
-<body style="overflow:hidden">
-    <div id="container"></div>
-    <div class="alert alert-success" style="position:absolute; left:100px; top:20px; ">
-        1.拖动红色实线节点，可以再次编辑线的形状。<br />
-        2.点击蓝色虚线触发回调函数。<br />
-    </div>
+<body>
+<div id="container" class="container"></div>
+<div class="test">
+    <b>操作</b>
+    <ol>
+        <li>拖动线段，可以编辑线。</li>
+        <li>点击线段触发回调。</li>
+    </ol>
+
+</div>
 
 <script type="text/javascript">
     init()
@@ -36,9 +54,11 @@
         TYInitialize(map);
 
         // 地图配置
-        TYMapTiles( new TYTilesOptions(TYEnumMapType.TY_Google_IMG));
+        TYMapTiles(new TYTilesOptions(TYEnumMapType.TY_Google_IMG));
+
+        addLine();
     }
-    function addline() {
+    function addLine() {
         var dataArr = [], lineArr = [], lineArr2 = [];
         lineArr.push(new TYLngLat(113.08 + 2, 38.30 + 2));
         lineArr.push(new TYLngLat(114.08 + 2, 38.30 + 2));
@@ -82,11 +102,8 @@
         line.lineState.isSetView = true;
         TYDrawLine(line);
     }
-    TYAddMapEvent(new TYEventOptions({
-        event: TYEnumEvent.TY_RIGHTCLICK,
-        callback: addline
-    }))
-    addline();
+
+
     function clickLine(e) {
         alert("触发回调事件")
         console.log(e)
