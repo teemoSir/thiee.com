@@ -1,43 +1,61 @@
 ﻿<!DOCTYPE html>
 <html>
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="UTF-8"/>
     <title>手绘点线面</title>
     <style type="text/css">
         html, body {
             padding: 0;
             margin: 0;
+            overflow: hidden;
         }
 
-        #container {
+        .container {
             width: 100%;
             height: 100%;
             position: absolute;
         }
 
+        .test {
+            position: absolute;
+            right: 1rem;
+            bottom: 3rem;;
+            font-size: 13px;
+            background-color: white;
+            border-radius: 3px;
+            border: 1px solid #ccc;
+            padding: 1rem;
+            max-height: 40%;
+            max-width: 40%;
+        }
 
     </style>
 
     <script src="../../lib/MapAPI_JavaScript.min.js"></script>
 </head>
-<body style="overflow:hidden">
-    <div id="container"></div>
-    <div class="alert alert-success" style="position:absolute;left:100px;top:20px;">
-        <label>提示：</label><br />
-        <label>点：</label>点击地图绘制Marker点。<br>
-        <label>线段：</label>点击最少两个点绘制线段，鼠标右击结束绘制。<br>
-        <label>矩形：</label>点击并拖动绘制矩形，鼠标松开即结束绘制。<br>
-        <label>多边形：</label>点击最少三个点绘制多边形，鼠标右击结束绘制。<br>
-        <label>圆形：</label>点击并拖动完成圆形绘制。<br>
-    </div>
-    <div style="position:absolute;right:20px;top:60px;">
-        <input type="button" class="btn btn-default" onclick="setType(1)" value="点" />
-        <input type="button" class="btn btn-default" onclick="setType(2)" value="线段" />
-        <input type="button" class="btn btn-default" onclick="setType(3)" value="矩形" />
-        <input type="button" class="btn btn-default" onclick="setType(4)" value="多边形" />
-        <input type="button" class="btn btn-default" onclick="setType(5)" value="圆形" />
-        <input type="button" class="btn btn-default" onclick="TYDrawStop(true)" value="关闭工具" />
-    </div>
+<body>
+<div id="container" class="container"></div>
+<div class="test">
+    <b>操作：</b>
+    <p>
+        <input type="button" class="btn btn-default" onclick="setType(1)" value="标记"/>
+        <input type="button" class="btn btn-default" onclick="setType(2)" value="线段"/>
+        <input type="button" class="btn btn-default" onclick="setType(3)" value="矩形"/>
+        <input type="button" class="btn btn-default" onclick="setType(4)" value="多边形"/>
+        <input type="button" class="btn btn-default" onclick="setType(5)" value="圆形"/>
+        <input type="button" class="btn btn-default" onclick="TYDrawStop(true)" value="关闭工具"/>
+
+
+    </p>
+    <b>提示：</b>
+    <ol>
+        <li>点：点击地图绘制标记。</li>
+        <li>线段：点击最少两个点绘制线段，双击结束绘制。
+        <li>矩形：点击并拖动绘制矩形，双击结束绘制。</li>
+        <li>多边形：点击最少三个点绘制多边形，双击结束绘制。</li>
+        <li>圆形：点击并拖动完成圆形绘制。</li>
+    </ol>
+</div>
 
 <script type="text/javascript">
     init()
@@ -51,15 +69,15 @@
         TYInitialize(map);
 
         // 地图配置
-        TYMapTiles( new TYTilesOptions(TYEnumMapType.TY_Google_IMG));
+        TYMapTiles(new TYTilesOptions(TYEnumMapType.TY_Google_IMG));
     }
 
     var draw = new TYOverlayOption();
     draw.isClearOverlay = true;
     draw.isShowMath = true;
-    draw.callfunc = drawPLR;
+    draw.callfunc = callback;
 
-    function drawPLR(e) {
+    function callback(e) {
         alert("完成手绘覆盖物，触发了回调函数");
         console.log(e)
     }
