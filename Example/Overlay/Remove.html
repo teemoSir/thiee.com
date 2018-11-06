@@ -7,6 +7,7 @@
         html, body {
             padding: 0;
             margin: 0;
+            overflow: hidden;
         }
 
         .container {
@@ -14,6 +15,7 @@
             height: 100%;
             position: absolute;
         }
+
         .test {
             position: absolute;
             right: 1rem;
@@ -29,23 +31,16 @@
     </style>
     <script src="../../lib/MapAPI_JavaScript.min.js"></script>
 </head>
-<body style="overflow:hidden">
+<body>
 <div id="container" class="container"></div>
 <div class="test">
     <b>操作：</b>
     <p>
-        <input class="btn btn-default" type="button" id="111" onclick="TYRemove('circle0')" value="删除id为circle0的覆盖物"/>
-        <input class="btn btn-default" type="button" id="222" onclick="TYClear()" value="全部删除"/>
+        <input type="button" onclick="TYClear()" value="全部删除"/>
     </p>
     <ol>
-        <li>删除一个圆</li>
-        <li> 全部删除会清空地图</li>
+        <li>鼠标右击删除图形</li>
     </ol>
-</div>
-
-<div style="right :20px; position:absolute; top:60px">
-
-
 </div>
 
 <script>
@@ -63,105 +58,68 @@
         // 地图配置
         TYMapTiles(new TYTilesOptions(TYEnumMapType.TY_Google_IMG));
 
-        addPoints(false);
         addCircle();
-        addPolygon();
+        removeByIdContextmenu()
     }
 
-    function addPoints(a) {
-        var data = [];
-        for (var i = 0; i < 50; i++) {
-            var p = new TYMarker({
-                pointId: "divid" + i,
-                label: new TYLabel({
-                    content: "<span style='color:red;border:1px solid red;background-color:blue;'>自定义的marker标签</span>",
-                    offset: new TYPixel(25, 15)
-                }),
-                lnglat: new TYLngLat(114.08 + Math.random() * 0.5, 38.30 + (0.1 * Math.random())),
-                icon: new TYIcon({
-                    url: 'http://map4.tygps.com/Images/Tymics/greenpoint.png'
-                })
-            });
-            data.push(p);
-        }
-        var pointobj = new TYPointOption();
-        pointobj.pointData = data;
-        pointobj.pointState.isClearOverlay = false;
-        pointobj.pointState.isGather = a;
-        pointobj.pointState.isSetView = false;
-
-        //绘制函数
-        TYDrawPoint(pointobj);
+    function removeByIdContextmenu() {
+        _map.getViewport().addEventListener("contextmenu", function (event) {
+            event.preventDefault();
+            var pixel = [event.clientX, event.clientY];
+            var feature = _map.forEachFeatureAtPixel(pixel, function (feature) {
+                return feature;
+            })
+            if (feature) {
+                TYRemove(feature.getId())
+            }
+        })
     }
-
 
     function addCircle() {
         var circleArr = [], cirArr = [];
         circleArr.push(new TYLngLat(113, 38));
-
+        circleArr.push(new TYLngLat(113, 39));
         for (var i in circleArr) {
             var data = new TYCircle();
-            data.circleId = "circle" + i;
+            data.circleId = "circle_" + i;
             data.fillColor = "red";
             data.fillOpacity = .6;
+            if (i % 2 == 0)
+                data.isEdit = true;
+            if (i % 2 == 0) {
+                data.lineColor = "red";
+                data.radius = 10000;
+            } else {
+                data.lineColor = "blue";
+                data.radius = 50000;
+            }
 
-            data.lineColor = "blue";
             data.lineOpacity = .8;
             data.lineType = null;
             data.lineWidth = 4;
             data.lnglat = circleArr[i];
-            data.radius = 10000;
+
             cirArr.push(data)
         }
 
-        var circle = new TYCircleOption();
-        circle.circleData = cirArr;
-        circle.circleState.isClearOverlay = false;
-        circle.circleState.isSetView = true;
-        TYDrawCircle(circle);
 
-    }
-
-
-    function clickMarker(e) {
-        alert("触发了回调函数");
-        console.log(e)
-    }
-
-    function addPolygon() {
-        var lnglatArr = [];
-        lnglatArr.push(new TYLngLat(113, 40));
-        lnglatArr.push(new TYLngLat(114, 39));
-        lnglatArr.push(new TYLngLat(111, 40));
-
-
-        var arr = [];
-        for (var i = 0; i < 1; i++) {
-            var data = new TYPolygon();
-            data.fillColor = "red";
-            data.fillOpacity = 0.7;
-            data.isEdit = false;
-            data.lineColor = "blue";
-            data.lineOpacity = 0.8;
-            data.lineType = null;
-            data.lineWidth = 4;
-            data.lnglat = lnglatArr;
-
-            data.polygonId = "poly";
-            arr.push(data);
-        }
-
-        var polygon = new TYPolygonOption();
-        polygon.polygonData = arr;
-        polygon.polygonState.isClearOverlay = false;
-        polygon.polygonState.isSetView = true;
         //实例化事件参数
         var event = new TYOverlayEvent();
+        event.mouseEvent = TYEnumEvent.TY_CLICK;
+        event.mouseFunc = callback;
 
-        TYDrawPolygon(polygon);
+        var circle = new TYCircleOption();
+        circle.circleData = cirArr;
+        circle.circleState.isClearOverlay = true;
+        circle.circleState.isSetView = true;
+        circle.circleState.overlayEvent = event;
+        TYDrawCircle(circle);
 
+        function callback(e) {
+
+            console.log(e)
+        }
     }
-
 
 </script>
 </body>

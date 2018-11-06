@@ -43,17 +43,18 @@
         <input type="button" class="btn btn-default" onclick="setType(3)" value="矩形"/>
         <input type="button" class="btn btn-default" onclick="setType(4)" value="多边形"/>
         <input type="button" class="btn btn-default" onclick="setType(5)" value="圆形"/>
-        <input type="button" class="btn btn-default" onclick="TYDrawStop(true)" value="关闭工具"/>
+        <input type="button" class="btn btn-default" onclick="TYDrawStop(false)" value="关闭工具"/>
 
 
     </p>
     <b>提示：</b>
     <ol>
-        <li>点：点击地图绘制标记。</li>
-        <li>线段：点击最少两个点绘制线段，双击结束绘制。
-        <li>矩形：点击并拖动绘制矩形，双击结束绘制。</li>
-        <li>多边形：点击最少三个点绘制多边形，双击结束绘制。</li>
-        <li>圆形：点击并拖动完成圆形绘制。</li>
+        <li>获得WGS84坐标</li>
+        <li>标记：拾取坐标。</li>
+        <li>线段：点击最少两个点绘制线段，双击结束，获得距离。
+        <li>矩形：点击并拖动绘制矩形，双击结束，获得面积。</li>
+        <li>多边形：点击最少三个点绘制多边形，双击结束，获得面积。</li>
+        <li>圆形：点击并拖动完成圆形绘制，获得面积。</li>
     </ol>
 </div>
 
@@ -74,7 +75,7 @@
 
     var draw = new TYOverlayOption();
     draw.isClearOverlay = false;
-    draw.isShowMath = false;
+    draw.isShowMath = true;
     draw.callfunc = callback;
 
     function callback(e) {

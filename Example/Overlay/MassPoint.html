@@ -60,7 +60,7 @@
     <p>
         <b>颜色</b>
         <select id="color" onchange="addPoint()">
-            <option value="#F54312" selected="">橘色</option>
+            <option value="#F54312" selected>橘色</option>
             <option value="#0000ff">蓝色</option>
             <option value="#00ff00">绿色</option>
         </select>
@@ -106,7 +106,8 @@
             count: document.getElementById("countNumber").value,//获取加载数量
             style: document.getElementById("style").value,//获取海量点类型
             size: document.getElementById("size").value,//获取海量点大小
-            alpha: document.getElementById("alpha").value//获取海量点整体透明度
+            alpha: document.getElementById("alpha").value,//获取海量点整体透明度
+            color: document.getElementById("color").value//获取海量点整体透明度
         }
 
         setElement(el.alpha)
