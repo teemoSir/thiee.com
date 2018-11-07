@@ -1,13 +1,13 @@
 ﻿<!DOCTYPE html>
 <html>
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="UTF-8"/>
     <title></title>
     <style>
         html, body {
             margin: 0;
             padding: 0;
-            overflow:hidden
+            overflow: hidden
         }
 
         .container {
@@ -16,23 +16,52 @@
             height: 100%;
         }
 
+        .test {
+            position: absolute;
+            right: 1rem;
+            bottom: 3rem;;
+            font-size: 13px;
+            background-color: white;
+            border-radius: 3px;
+            border: 1px solid #ccc;
+            padding: 1rem;
+            max-height: 40%;
+            max-width: 40%;
+        }
     </style>
-    <script src="../../lib/MapAPI_JavaScript.min.js"></script>
+    <script src="../../lib/MapAPI_JavaScript.js"></script>
 
 
 </head>
-<body >
-    <div id="container" class="container"></div>
-<div class=" btn-group " style="position:absolute; right:20px; top:100px;">
-
-    <button class="btn btn-default  btn-sm" onclick="ditu(1)">360实时路况</button>
-    <button class="btn btn-default btn-sm" onclick="ditu(2)">腾讯实时路况</button>
-    <button class="btn btn-default btn-sm" onclick="ditu(3)">高德实时路况</button>
-    <button class="btn btn-default btn-sm" onclick="TYCloseTraffic()">关闭实时路况</button>
+<body>
+<div id="container" class="container"></div>
+<div class=" test ">
+    <b>操作</b>
+    <p>
+    <button id="traffic_360">360拥堵图层</button>
+    <button id="traffic_amap">高德拥堵图层</button>
+    <button id="traffic_ishow">秀友拥堵图层</button>
+    <button id="traffic_close">关闭</button>
+    <input id="traffic_time" type="range" min="2000" max="20000" value="5000">
+    <span id="time"></span>
+    </p>
+    <b>提示</b>
+    <ol>
+        <li>TYEnumTraffic.TY_TRAFFIC_360：360拥堵图层</li>
+        <li>TYEnumTraffic.TY_TRAFFIC_AMAP：高德拥堵图层</li>
+        <li>TYEnumTraffic.TY_TRAFFIC_ISHOW：秀友拥堵图层</li>
+    </ol>
 </div>
 
-<div class="alert alert-success" style="position:absolute; left:100px; top:20px; "><label>提示：</label> 1.点击按钮切换路况</div>
 <script>
+    var el = {
+        layer_360: document.getElementById("traffic_360"),
+        traffic_amap: document.getElementById("traffic_amap"),
+        traffic_ishow: document.getElementById("traffic_ishow"),
+        traffic_close: document.getElementById("traffic_close"),
+        traffic_time: document.getElementById("traffic_time"),
+        time: document.getElementById("time")
+    }
 
     init()
 
@@ -45,12 +74,27 @@
         TYInitialize(map);
 
         // 地图配置
-        TYMapTiles( new TYTilesOptions(TYEnumMapType.TY_Google_IMG));
+        TYMapTiles(new TYTilesOptions(TYEnumMapType.TY_Google_IMG));
+
+        //加载图层
+        TYOpenTraffic(TYEnumTraffic.TY_TRAFFIC_360, (Number(el.traffic_time.value) / 1000))
+
+        //刷新频率
+        el.time.innerHTML = "<p>刷新频率：" + (Number(el.traffic_time.value) / 1000) + "秒/次</p>"
     }
 
-    function ditu(a) {
-        TYOpenTraffic(a,20000);
-    }
+    el.layer_360.addEventListener("click", function () {
+        TYOpenTraffic(TYEnumTraffic.TY_TRAFFIC_360, Number(el.traffic_time.value))
+    })
+    el.traffic_amap.addEventListener("click", function () {
+        TYOpenTraffic(TYEnumTraffic.TY_TRAFFIC_AMAP, Number(el.traffic_time.value))
+    })
+    el.traffic_ishow.addEventListener("click", function () {
+        TYOpenTraffic(TYEnumTraffic.TY_TRAFFIC_ISHOW, Number(el.traffic_time.value))
+    })
+    el.traffic_time.addEventListener("change", function () {
+        el.time.innerHTML = "<p>刷新频率：" + (Number(el.traffic_time.value) / 1000) + "秒/次</p>"
+    })
 </script>
 </body>
 </html>
