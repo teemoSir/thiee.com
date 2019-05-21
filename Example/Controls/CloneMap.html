@@ -131,21 +131,22 @@
                 layernew = layer.ishowchina;
                 break;
         }
-        if (map == 1) {
-            var ll = leftmap.getLayers();
-            for (var i in ll) {
-                leftmap.removeLayer(ll[i])
-            }
+         if (map == 1) {
+            leftmap.removeLayer(layer.amap);
+            leftmap.removeLayer(layer.gmap);
+            leftmap.removeLayer(layer.ishowchina);
+            leftmap.removeLayer(layer.osm);
+
             leftmap.addLayer(layernew);
         } else {
-
-            var ll = rightmap.getLayers();
-            for (var i in ll) {
-                rightmap.removeLayer(ll[i])
-            }
+            rightmap.removeLayer(layer.amap);
+            rightmap.removeLayer(layer.gmap);
+            rightmap.removeLayer(layer.ishowchina);
+            rightmap.removeLayer(layer.osm);
 
             rightmap.addLayer(layernew);
         }
+
 
     }
 </script>
