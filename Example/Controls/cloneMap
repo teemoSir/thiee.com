@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <link rel="stylesheet" href="../../lib/openlayers.css" type="text/css">
+    <!-- The line below is only needed for old environments like Internet Explorer and Android 4.x -->
+    <script src="../../lib/openlayers.js"></script>
+
+    <style>
+
+     #canvasMap,#webglMap{
+         position: absolute;
+         width: 49%;
+         height: 89%;
+     }
+    </style>
+</head>
+<body>
+<table width="100%">
+    <tr   style="width: 50%">
+        <td><select onchange="loadmap(this,1)">
+            <option value="ishowchina">我秀地图</option>
+            <option value="osm">OSM</option>
+            <option value="amap" selected="selected">高德地图</option>
+            <option value="gmap">谷歌地图</option>
+        </select></td>
+        <td><select onchange="loadmap(this,2)">
+            <option value="ishowchina" selected="selected">我秀地图</option>
+            <option value="osm">OSM</option>
+            <option value="amap">高德地图</option>
+            <option value="gmap">谷歌地图</option>
+        </select></td>
+    </tr>
+    <tr  style="width: 50%">
+        <td>
+            <div id="canvasMap" class="map"></div>
+        </td>
+
+        <td>
+            <div id="webglMap" class="map"></div>
+        </td>
+    </tr>
+</table>
+
+<script>
+
+    var layer = {
+        amap: new ol.layer.Tile({
+            source: new ol.source.XYZ({
+                attributions: ["@ AMap "],
+                urls: ['http://webrd01.is.autonavi.com/appmaptile?lang=zh_cn&size=1&scale=1&style=8&x={x}&y={y}&z={z}']
+            })
+        }),
+        ishowchina: new ol.layer.Tile({
+            source: new ol.source.XYZ({
+                attributions: ["@ IShowchina "],
+                urls: ['http://tile4.ishowchina.com/v3/tile/{z}/{x}/{y}.png']
+            })
+        }),
+        gmap: new ol.layer.Tile({
+            source: new ol.source.XYZ({
+                attributions: ["@ Google "],
+                urls: ['http://mt3.google.cn/vt/lyrs=m@142&hl=zh-CN&gl=cn&x={x}&y={y}&z={z}&s=Galil']
+            })
+        }),
+        osm: new ol.layer.Tile({
+            source: new ol.source.XYZ({
+                attributions: ["@ OSM "],
+                urls: [' https://c.tile.openstreetmap.org/{z}/{x}/{y}.png']
+            })
+        })
+    }
+
+    var view = new ol.View({
+        // projection: 'EPSG:4326',
+        center: [12107843.578148257, 4433705.053502085],
+        zoom: 4
+    });
+
+    var leftmap = new ol.Map({
+        target: 'canvasMap',
+        layers: [layer.amap],
+        view: view
+    });
+
+    var rightmap = new ol.Map({
+        target: 'webglMap',
+        layers: [layer.ishowchina],
+        view: view
+    });
+
+    var graticuleLayer = new ol.Graticule({
+        strokeStyle: new ol.style.Stroke({
+            color: 'rgba(12, 12, 12, 0.8)',
+            width: 0.6
+        }),
+        targetSize: 100
+    });
+    graticuleLayer.setMap(leftmap);
+
+    var graticuleLayer2 = new ol.Graticule({
+        strokeStyle: new ol.style.Stroke({
+            color: 'rgba(12, 12, 12, 0.8)',
+            width: 0.6
+        }),
+        targetSize: 100
+    });
+    graticuleLayer2.setMap(rightmap);
+
+    rightmap.on('click',function(e){
+        console.log(e)
+    })
+</script>
+<script>
+
+    function loadmap(options, map) {
+
+        console.log(options.value);
+        var layernew;
+        switch (options.value) {
+            case 'amap':
+                layernew = layer.amap;
+                break;
+            case 'gmap':
+                layernew = layer.gmap;
+                break;
+            case 'osm':
+                layernew = layer.osm;
+                break;
+            case 'ishowchina':
+                layernew = layer.ishowchina;
+                break;
+        }
+        if (map == 1) {
+            var ll = leftmap.getLayers();
+            for (var i in ll) {
+                leftmap.removeLayer(ll[i])
+            }
+            leftmap.addLayer(layernew);
+        } else {
+
+            var ll = rightmap.getLayers();
+            for (var i in ll) {
+                rightmap.removeLayer(ll[i])
+            }
+
+            rightmap.addLayer(layernew);
+        }
+
+    }
+</script>
+</body>
+</html>
